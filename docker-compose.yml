@@ -1,33 +1,28 @@
 version: '3.8'
 
 networks:
-  nlab:
-    name: nlab
+  ft_transcendence:
+    name: ft_transcendence
 
-volumes:
-  vlab:
-    name: vlab
-  # postgres_data:
-  #   name: postgres_data
-  # pgadmin_data:
-  #   name: pgadmin_data
+# volumes:
+#   ft_transcendence:
+#     name: ft_transcendence
+#   postgres_data:
+#     name: postgres_data
 
 services:
-  lab:
-    image: ilab
-    container_name: clab
+  ft_transcendence:
+    image: ft_transcendence
+    container_name: ft_transcendence
     build: .
     env_file:
       - .env
     volumes:
-      - vlab:/var/www/html
       - ./lab:/root/lab
       - ./zshrc:/root/.zshrc
       - ./zsh_history:/root/.zsh_history
     networks:
-      - nlab
-    # depends_on:
-    #   - db
+      - ft_transcendence
     
   # db:
   #   image: postgres:13
@@ -39,19 +34,4 @@ services:
   #     - POSTGRES_USER=${DB_USER}
   #     - POSTGRES_PASSWORD=${DB_PASSWORD}
   #   networks:
-  #     - nlab
-
-  # pgadmin:
-  #   image: dpage/pgadmin4
-  #   container_name: pgadmin
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-  #     PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-  #   volumes:
-  #     - pgadmin_data:/var/lib/pgadmin
-  #   ports:
-  #     - "5050:80"
-  #   networks:
-  #     - nlab
-  #   depends_on:
-  #     - db
+  #     - ft_transcendence
