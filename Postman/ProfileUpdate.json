@@ -1,0 +1,296 @@
+{
+	"info": {
+		"_postman_id": "7cb5cd6b-aa36-4aa3-8810-41d069f21e6d",
+		"name": "ProfileUpdate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "38553129"
+	},
+	"item": [
+		{
+			"name": "Register User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response contains access and refresh tokens\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.access).to.be.a('string');",
+							"    pm.expect(jsonData.refresh).to.be.a('string');",
+							"    pm.expect(jsonData.user).to.be.an('object');",
+							"});",
+							"",
+							"pm.test(\"User object contains expected fields\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.user).to.have.property('id');",
+							"    pm.expect(jsonData.user).to.have.property('username');",
+							"    pm.expect(jsonData.user).to.have.property('email');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"testuser\",\n    \"email\": \"testuser@example.com\",\n    \"password\": \"securepassword123\",\n    \"password2\": \"securepassword123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/register"
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains access and refresh tokens\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.access).to.be.a('string');",
+							"    pm.expect(jsonData.refresh).to.be.a('string');",
+							"    pm.expect(jsonData.user).to.be.an('object');",
+							"    ",
+							"    pm.environment.set(\"access_token\", jsonData.access);",
+							"    pm.environment.set(\"refresh_token\", jsonData.refresh);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"securepassword123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/login"
+			},
+			"response": []
+		},
+		{
+			"name": "Profile Update (Duplicate Email)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Error message for duplicate email\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('email');",
+							"    pm.expect(jsonData.email[0]).to.include('your current email address');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"testuser@example.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/profile-update"
+			},
+			"response": []
+		},
+		{
+			"name": "Profile Update (Duplicate Email Using Admin's Email)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Error message for duplicate email\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('email');",
+							"    pm.expect(jsonData.email[0]).to.include('already exists');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"admin@example.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/profile-update"
+			},
+			"response": []
+		},
+		{
+			"name": "Profile Update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Profile update successful\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.first_name).to.eql(\"Updated\");",
+							"    pm.expect(jsonData.last_name).to.eql(\"Name\");",
+							"    pm.expect(jsonData.email).to.eql(\"updated@example.com\");",
+							"});",
+							"",
+							"pm.test(\"Response contains expected fields\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('first_name');",
+							"    pm.expect(jsonData).to.have.property('last_name');",
+							"    pm.expect(jsonData).to.have.property('email');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_name\": \"Updated\",\n    \"last_name\": \"Name\",\n    \"email\": \"updated@example.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/profile-update"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": "{{base_url}}/delete-account"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api"
+		},
+		{
+			"key": "access_token",
+			"value": ""
+		},
+		{
+			"key": "refresh_token",
+			"value": ""
+		}
+	]
+}

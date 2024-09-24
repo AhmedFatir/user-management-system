@@ -1,0 +1,274 @@
+{
+	"info": {
+		"_postman_id": "e5444603-c680-4efc-bd10-1e98d7e20f06",
+		"name": "Profile",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "38553129"
+	},
+	"item": [
+		{
+			"name": "Register User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response contains access and refresh tokens\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.access).to.be.a('string');",
+							"    pm.expect(jsonData.refresh).to.be.a('string');",
+							"    pm.expect(jsonData.user).to.be.an('object');",
+							"});",
+							"",
+							"pm.test(\"User object contains expected fields\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.user).to.have.property('id');",
+							"    pm.expect(jsonData.user).to.have.property('username');",
+							"    pm.expect(jsonData.user).to.have.property('email');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"testuser\",\n    \"email\": \"testuser@example.com\",\n    \"password\": \"securepassword123\",\n    \"password2\": \"securepassword123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/register"
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains access and refresh tokens\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.access).to.be.a('string');",
+							"    pm.expect(jsonData.refresh).to.be.a('string');",
+							"    pm.expect(jsonData.user).to.be.an('object');",
+							"    ",
+							"    pm.environment.set(\"access_token\", jsonData.access);",
+							"    pm.environment.set(\"refresh_token\", jsonData.refresh);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"securepassword123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/login"
+			},
+			"response": []
+		},
+		{
+			"name": "Refresh Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains new access token\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.access).to.be.a('string');",
+							"    ",
+							"    pm.environment.set(\"access_token\", jsonData.access);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"refresh\": \"{{refresh_token}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/token/refresh/"
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Profile (No Authentication)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Response contains authentication error\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('detail');",
+							"    pm.expect(jsonData.detail).to.include('Authentication credentials were not provided');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{base_url}}/user"
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Profile (Invalid Token)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Response contains token error\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('detail');",
+							"    pm.expect(jsonData.detail).to.include('Given token not valid');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer invalidtoken123",
+						"type": "text"
+					}
+				],
+				"url": "{{base_url}}/user"
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains user details\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('id');",
+							"    pm.expect(jsonData).to.have.property('username');",
+							"    pm.expect(jsonData).to.have.property('email');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": "{{base_url}}/user"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": "{{base_url}}/delete-account"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api"
+		},
+		{
+			"key": "access_token",
+			"value": ""
+		},
+		{
+			"key": "refresh_token",
+			"value": ""
+		}
+	]
+}
