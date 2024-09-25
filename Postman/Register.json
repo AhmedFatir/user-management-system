@@ -47,7 +47,7 @@
 						}
 					}
 				},
-				"url": "{{base_url}}/register"
+				"url": "{{base_url}}/register/"
 			},
 			"response": []
 		},
@@ -84,7 +84,7 @@
 						}
 					}
 				},
-				"url": "{{base_url}}/register"
+				"url": "{{base_url}}/register/"
 			},
 			"response": []
 		},
@@ -121,7 +121,7 @@
 						}
 					}
 				},
-				"url": "{{base_url}}/register"
+				"url": "{{base_url}}/register/"
 			},
 			"response": []
 		},
@@ -162,7 +162,7 @@
 						}
 					}
 				},
-				"url": "{{base_url}}/login"
+				"url": "{{base_url}}/login/"
 			},
 			"response": []
 		},
@@ -191,7 +191,7 @@
 						"type": "text"
 					}
 				],
-				"url": "{{base_url}}/delete-account"
+				"url": "{{base_url}}/delete-account/"
 			},
 			"response": []
 		}
