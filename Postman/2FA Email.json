@@ -1,0 +1,505 @@
+{
+	"info": {
+		"_postman_id": "ef8885f6-756b-49ab-a462-2edb45d171df",
+		"name": "2FA Email",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "38553129"
+	},
+	"item": [
+		{
+			"name": "Register User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response contains access and refresh tokens\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.access).to.be.a('string');",
+							"    pm.expect(jsonData.refresh).to.be.a('string');",
+							"    pm.expect(jsonData.user).to.be.an('object');",
+							"});",
+							"",
+							"pm.test(\"User object contains expected fields\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.user).to.have.property('id');",
+							"    pm.expect(jsonData.user).to.have.property('username');",
+							"    pm.expect(jsonData.user).to.have.property('email');",
+							"});",
+							"",
+							"try {",
+							"    if (pm.response.code === 201) {",
+							"        var jsonData = pm.response.json();",
+							"        ",
+							"        pm.collectionVariables.set(\"access_token\", jsonData.access);",
+							"        pm.collectionVariables.set(\"refresh_token\", jsonData.refresh);",
+							"    }",
+							"} catch (error) {",
+							"    console.error(\"Error in test script:\", error);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"testuser\",\n    \"email\": \"{{email}}\",\n    \"password\": \"securepassword123\",\n    \"password2\": \"securepassword123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/register/"
+			},
+			"response": []
+		},
+		{
+			"name": "Login (success)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains access and refresh tokens\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.access).to.be.a('string');",
+							"    pm.expect(jsonData.refresh).to.be.a('string');",
+							"    pm.expect(jsonData.user).to.be.an('object');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"securepassword123\"\n}"
+				},
+				"url": "{{base_url}}/login/"
+			},
+			"response": []
+		},
+		{
+			"name": "Enable 2FA",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains expected message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).to.eql('Please check your email for the 2FA code to enable two-factor authentication.');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": "{{base_url}}/enable-2fa/"
+			},
+			"response": []
+		},
+		{
+			"name": "Enable 2FA (Confirmation)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains expected message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).to.eql('2FA has been enabled successfully.');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"code\": \"{{enable_code}}\"\n}"
+				},
+				"url": "{{base_url}}/verify-enable-2fa/"
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains success message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).to.eql(\"Successfully logged out.\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"refresh_token\": \"{{refresh_token}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/logout/"
+			},
+			"response": []
+		},
+		{
+			"name": "Login (2FA)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {",
+							"    if (pm.response.code === 200) {",
+							"        var jsonData = pm.response.json();",
+							"        pm.collectionVariables.set(\"user_id\", jsonData.user_id);",
+							"    }",
+							"} catch (error) {",
+							"    console.error(\"Error in test script:\", error);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"securepassword123\"\n}"
+				},
+				"url": "{{base_url}}/login/"
+			},
+			"response": []
+		},
+		{
+			"name": "2FA (Confirmation)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains access and refresh tokens\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.access).to.be.a('string');",
+							"    pm.expect(jsonData.refresh).to.be.a('string');",
+							"    pm.expect(jsonData.user).to.be.an('object');",
+							"});",
+							"",
+							"try {",
+							"    if (pm.response.code === 200) {",
+							"        var jsonData = pm.response.json();",
+							"        ",
+							"        pm.collectionVariables.set(\"access_token\", jsonData.access);",
+							"        pm.collectionVariables.set(\"refresh_token\", jsonData.refresh);",
+							"    }",
+							"} catch (error) {",
+							"    console.error(\"Error in test script:\", error);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": {{user_id}},\n    \"code\": \"{{2fa_code}}\"\n}"
+				},
+				"url": "{{base_url}}/verify-2fa/"
+			},
+			"response": []
+		},
+		{
+			"name": "2FA (Disable)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains expected message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).to.eql('2FA has been disabled successfully.');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": "{{base_url}}/disable-2fa/"
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains success message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.detail).to.eql(\"Successfully logged out.\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"refresh_token\": \"{{refresh_token}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/logout/"
+			},
+			"response": []
+		},
+		{
+			"name": "Login (success)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains access and refresh tokens\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.access).to.be.a('string');",
+							"    pm.expect(jsonData.refresh).to.be.a('string');",
+							"    pm.expect(jsonData.user).to.be.an('object');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"securepassword123\"\n}"
+				},
+				"url": "{{base_url}}/login/"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": "{{base_url}}/delete-account/"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "email",
+			"value": "example@example.com",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "2fa_code",
+			"value": "123456",
+			"type": "string"
+		},
+		{
+			"key": "enable_code",
+			"value": "123456",
+			"type": "string"
+		}
+	]
+}

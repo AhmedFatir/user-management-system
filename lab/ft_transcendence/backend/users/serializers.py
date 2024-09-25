@@ -13,13 +13,15 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 'date_joined', 'last_login']
         read_only_fields = ['date_joined', 'last_login']
 
-class LoginSerializer(Serializer):    
+
+class LoginSerializer(Serializer):
     username = CharField()
     password = CharField()
 
     def get_user(self, data):
         user = authenticate(username=data['username'], password=data['password'])
         return user
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True, required=True)
@@ -50,6 +52,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+
 
 class PasswordChangeSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
@@ -92,7 +95,6 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         instance.email = validated_data.get('email', instance.email)
         instance.save()
         return instance
-    
 
 
 class PasswordResetSerializer(serializers.Serializer):

@@ -14,7 +14,8 @@ def print_menu():
     print("5. Password Update")
     print("6. User Update")
     print("7. Delete Account")
-    print("8. Exit")
+    print("8. 2FA")
+    print("9. Exit")
     print("=======================================")
 
 def run_test(script_name):
@@ -43,6 +44,8 @@ def main():
         elif choice == '7':
             run_test('tests/delete')
         elif choice == '8':
+            run_test('tests/2FA')
+        elif choice == '9':
             print("Exiting. Goodbye!")
             break
         else:

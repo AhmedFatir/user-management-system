@@ -2,6 +2,7 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import RegisterView, LoginView, LogoutView, UserView, PasswordResetView
 from .views import PasswordChangeView, DeleteAccountView, ProfileUpdateView
+from .views import VerifyTwoFactorView, Enable2FAView, Verify2FAEnableView, Disable2FAView
 
 urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -14,4 +15,9 @@ urlpatterns = [
     path('delete-account/', DeleteAccountView.as_view(), name="delete-account"),
     path('profile-update/', ProfileUpdateView.as_view(), name="profile-update"),
     path('password-reset/', PasswordResetView.as_view(), name='password_reset'),
+    path('verify-2fa/', VerifyTwoFactorView.as_view(), name='verify_2fa'),
+    path('enable-2fa/', Enable2FAView.as_view(), name='enable_2fa'),
+    path('verify-enable-2fa/', Verify2FAEnableView.as_view(), name='verify_enable_2fa'),
+    path('disable-2fa/', Disable2FAView.as_view(), name='disable_2fa'),
+    
 ]
