@@ -5,17 +5,17 @@ from django.utils.translation import gettext as _
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login
 from django.core.mail import send_mail
 from django.conf import settings
-import random, string
+from django.shortcuts import redirect
+import random, string, requests
 
-from .models import TwoFactorCode, CustomUser
-
+from .models import TwoFactorCode
 
 from .serializers import UserSerializer, LoginSerializer, RegisterSerializer
 from .serializers import PasswordChangeSerializer, ProfileUpdateSerializer
-from .serializers import PasswordResetSerializer
+from .serializers import PasswordResetSerializer, IntraUserSerializer
 
 User = get_user_model()
 
@@ -235,3 +235,96 @@ class Disable2FAView(APIView):
         user.is_2fa_enabled = False
         user.save()
         return Response({'detail': '2FA has been disabled successfully.'}, status=status.HTTP_200_OK)
+
+
+
+class IntraLoginView(APIView):
+    def get(self, request):
+        url = f"{settings.INTRA_AUTHORIZATION_BASE_URL}?client_id={settings.INTRA_CLIENT_ID}&redirect_uri={settings.INTRA_REDIRECT_URI}&response_type=code"
+        return redirect(url)
+
+
+class IntraCallbackView(APIView):
+    def get(self, request):
+        code = request.GET.get('code')
+        if not code:
+            return Response({'error': 'No code provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Exchange code for token
+        token_response = requests.post(settings.INTRA_TOKEN_URL, data={
+            'grant_type': 'authorization_code',
+            'client_id': settings.INTRA_CLIENT_ID,
+            'client_secret': settings.INTRA_CLIENT_SECRET,
+            'code': code,
+            'redirect_uri': settings.INTRA_REDIRECT_URI
+        })
+
+        if token_response.status_code != 200:
+            return Response({'error': 'Failed to obtain token'}, status=status.HTTP_400_BAD_REQUEST)
+
+        access_token = token_response.json()['access_token']
+
+        # Get user data from Intra
+        user_response = requests.get(settings.INTRA_USER_DATA_URL, headers={
+            'Authorization': f'Bearer {access_token}'
+        })
+
+        if user_response.status_code != 200:
+            return Response({'error': 'Failed to obtain user data'}, status=status.HTTP_400_BAD_REQUEST)
+
+        intra_user_data = user_response.json()
+
+        # Check if user exists
+        existing_user = User.objects.filter(intra_id=str(intra_user_data['id'])).first()
+
+        if existing_user:
+            # User exists, log them in
+            login(request, existing_user)
+            refresh = RefreshToken.for_user(existing_user)
+            return Response({
+                'message': 'Login successful',
+                'user_id': existing_user.id,
+                'username': existing_user.username,
+                'email': existing_user.email,
+                'access_token': str(refresh.access_token),
+                'refresh_token': str(refresh),
+            }, status=status.HTTP_200_OK)
+        
+        # New user, check for conflicts
+        serializer = IntraUserSerializer(data={
+            'username': intra_user_data['login'],
+            'email': intra_user_data['email'],
+            'first_name': intra_user_data.get('first_name', ''),
+            'last_name': intra_user_data.get('last_name', ''),
+        })
+
+        if not serializer.is_valid():
+            # There are conflicts, return the data for the user to modify
+            return Response({
+                'message': 'User information conflicts detected',
+                'intra_id': intra_user_data['id'],
+                'proposed_data': serializer.initial_data,
+                'errors': serializer.errors
+            }, status=status.HTTP_409_CONFLICT)
+
+        # No conflicts, create the user
+        user = User.objects.create_user(
+            intra_id=str(intra_user_data['id']),
+            username=serializer.validated_data['username'],
+            email=serializer.validated_data['email'],
+            first_name=serializer.validated_data['first_name'],
+            last_name=serializer.validated_data['last_name'],
+            password=User.objects.make_random_password()
+        )
+
+        login(request, user)
+        refresh = RefreshToken.for_user(user)
+
+        return Response({
+            'message': 'User created and logged in successfully',
+            'user_id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'access_token': str(refresh.access_token),
+            'refresh_token': str(refresh),
+        }, status=status.HTTP_201_CREATED)

@@ -1,5 +1,4 @@
 import requests
-import time
 from getpass import getpass
 
 BASE_URL = "http://localhost:8000/api"

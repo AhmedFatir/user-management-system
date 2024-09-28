@@ -165,3 +165,11 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
 DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_USER')
+
+
+INTRA_CLIENT_ID = os.environ.get('UID_INTRA')
+INTRA_CLIENT_SECRET = os.environ.get('SECRET_INTRA')
+INTRA_REDIRECT_URI = 'http://localhost:8000/api/complete/intra42/'
+INTRA_AUTHORIZATION_BASE_URL = 'https://api.intra.42.fr/oauth/authorize'
+INTRA_TOKEN_URL = 'https://api.intra.42.fr/oauth/token'
+INTRA_USER_DATA_URL = 'https://api.intra.42.fr/v2/me'

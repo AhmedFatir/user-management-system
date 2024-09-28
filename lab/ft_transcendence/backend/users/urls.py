@@ -3,6 +3,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import RegisterView, LoginView, LogoutView, UserView, PasswordResetView
 from .views import PasswordChangeView, DeleteAccountView, ProfileUpdateView
 from .views import VerifyTwoFactorView, Enable2FAView, Verify2FAEnableView, Disable2FAView
+from .views import IntraLoginView, IntraCallbackView
 
 urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -20,4 +21,6 @@ urlpatterns = [
     path('verify-enable-2fa/', Verify2FAEnableView.as_view(), name='verify_enable_2fa'),
     path('disable-2fa/', Disable2FAView.as_view(), name='disable_2fa'),
     
+    path('login/intra42/', IntraLoginView.as_view(), name='intra_login'),
+    path('complete/intra42/', IntraCallbackView.as_view(), name='intra_callback'),
 ]

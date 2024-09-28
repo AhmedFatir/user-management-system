@@ -1,6 +1,5 @@
-from rest_framework.serializers import Serializer, CharField
+from rest_framework.serializers import Serializer, CharField, ModelSerializer
 from django.contrib.auth import authenticate
-from rest_framework.serializers import ModelSerializer 
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import get_user_model
@@ -104,4 +103,19 @@ class PasswordResetSerializer(serializers.Serializer):
         if not User.objects.filter(email=value).exists():
             raise serializers.ValidationError("User with this email address does not exist.")
         return value
-    
+
+
+class IntraUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name']
+
+    def validate_username(self, value):
+        if User.objects.filter(username=value).exists():
+            raise serializers.ValidationError("This username is already in use.")
+        return value
+
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("This email is already in use.")
+        return value
