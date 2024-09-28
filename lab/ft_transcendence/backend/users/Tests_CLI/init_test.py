@@ -15,7 +15,8 @@ def print_menu():
     print("6. User Update")
     print("7. Delete Account")
     print("8. 2FA")
-    print("9. Exit")
+    print("9. OAuth with 42")
+    print("0. Exit")
     print("=======================================")
 
 def run_test(script_name):
@@ -27,7 +28,7 @@ def run_test(script_name):
 def main():
     while True:
         print_menu()
-        choice = input("Enter your choice (1-8): ")
+        choice = input("Enter your choice (0-9): ")
         
         if choice == '1':
             run_test('tests/register')
@@ -46,6 +47,8 @@ def main():
         elif choice == '8':
             run_test('tests/2FA')
         elif choice == '9':
+            run_test('tests/42_OAuth')
+        elif choice == '0':
             print("Exiting. Goodbye!")
             break
         else:
