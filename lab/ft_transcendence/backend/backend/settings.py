@@ -173,3 +173,11 @@ INTRA_REDIRECT_URI = 'http://localhost:8000/api/complete/intra42/'
 INTRA_AUTHORIZATION_BASE_URL = 'https://api.intra.42.fr/oauth/authorize'
 INTRA_TOKEN_URL = 'https://api.intra.42.fr/oauth/token'
 INTRA_USER_DATA_URL = 'https://api.intra.42.fr/v2/me'
+
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
+
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.MemoryFileUploadHandler',
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+]

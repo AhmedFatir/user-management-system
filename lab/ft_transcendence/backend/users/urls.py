@@ -5,7 +5,7 @@ from .views.Register import RegisterView
 from .views.Login import LoginView
 from .views.Logout import LogoutView, DeleteAccountView
 from .views.users import UsersView, UserDetailView
-from .views.Profile import ProfileUpdateView
+from .views.Profile import ProfileUpdateView, AvatarUploadView, FriendRequestView, FriendListView
 from .views.Passwords import PasswordResetView, PasswordChangeView
 from .views.TwoFactor import VerifyTwoFactorView, Enable2FAView, Verify2FAEnableView, Disable2FAView
 from .views.Intra42 import IntraLoginView, IntraCallbackView
@@ -21,7 +21,6 @@ urlpatterns = [
 
     path('logout/', LogoutView.as_view(), name="logout"),
     path('delete-account/', DeleteAccountView.as_view(), name="delete-account"),
-    path('profile-update/', ProfileUpdateView.as_view(), name="profile-update"),
     
     path('password-change/', PasswordChangeView.as_view(), name="password_change"),
     path('password-reset/', PasswordResetView.as_view(), name='password_reset'),
@@ -33,5 +32,10 @@ urlpatterns = [
     
     path('login/intra42/', IntraLoginView.as_view(), name='intra_login'),
     path('complete/intra42/', IntraCallbackView.as_view(), name='intra_callback'),
+
+    path('profile-update/', ProfileUpdateView.as_view(), name="profile-update"),
+    path('upload-avatar/', AvatarUploadView.as_view(), name='upload-avatar'),
+    path('send-friend-request/', FriendRequestView.as_view(), name='send-friend-request'),
+    path('friends/', FriendListView.as_view(), name='friend-list'),
 
 ]

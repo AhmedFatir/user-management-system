@@ -6,6 +6,14 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.storage import default_storage
+
+from django.test import override_settings
+from django.conf import settings
+import os, time, io, tempfile, shutil
+from django.utils import timezone
+from PIL import Image
 
 User = get_user_model()
 
@@ -35,14 +43,14 @@ class RegistrationTestCase(TestCase):
         response = self.client.post(self.register_url, invalid_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(User.objects.count(), 0)
-    
+	
     def test_registration_with_existing_email(self):
         User.objects.create_user(username='existinguser', email='testuser@example.com', password='testpass123')
 
         new_user_data = self.user_data.copy()
         new_user_data['username'] = 'newuser'
         response = self.client.post(self.register_url, new_user_data)
-        
+		
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('email', response.data)
         self.assertIn('already exists', str(response.data['email']).lower())
@@ -54,12 +62,11 @@ class RegistrationTestCase(TestCase):
         new_user_data = self.user_data.copy()
         new_user_data['email'] = 'newuser@example.com'
         response = self.client.post(self.register_url, new_user_data)
-        
+		
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('username', response.data)
         self.assertIn('already exists', str(response.data['username']).lower())
         self.assertEqual(User.objects.count(), 1)  # Ensure no new user was created
-
 
 class LoginTestCase(TestCase):
 
@@ -88,7 +95,6 @@ class LoginTestCase(TestCase):
 		}
 		response = self.client.post(self.login_url, login_data)
 		self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
 
 class LogoutTestCase(TestCase):
 
@@ -219,7 +225,6 @@ class DeleteAccountTestCase(TestCase):
 		self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 		self.assertFalse(User.objects.filter(username='testuser').exists())
 
-
 class ProfileUpdateTestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
@@ -264,9 +269,8 @@ class ProfileUpdateTestCase(TestCase):
         response = self.client.put(self.profile_update_url, data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-
 class UserTestCase(TestCase):
-    
+	
     def setUp(self):
         self.client = APIClient()
         self.users_url = reverse('users')
@@ -318,3 +322,153 @@ class UserTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['username'], 'testuser1')
         self.assertEqual(response.data['email'], 'testuser1@example.com')
+
+class FriendsTests(TestCase):
+	def setUp(self):
+		self.client = APIClient()
+		self.user1 = User.objects.create_user(username='testuser1', email='test1@example.com', password='testpass123')
+		self.user2 = User.objects.create_user(username='testuser2', email='test2@example.com', password='testpass123')
+		self.client.force_authenticate(user=self.user1)
+
+	def test_send_friend_request(self):
+		url = reverse('send-friend-request')
+		data = {'username': 'testuser2'}
+		
+		response = self.client.post(url, data)
+		
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.user1.refresh_from_db()
+		self.assertTrue(self.user2 in self.user1.friends.all())
+
+	def test_send_friend_request_to_nonexistent_user(self):
+		url = reverse('send-friend-request')
+		data = {'username': 'nonexistentuser'}
+		
+		response = self.client.post(url, data)
+		
+		self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+	def test_friend_list(self):
+		self.user1.friends.add(self.user2)
+		url = reverse('friend-list')
+		
+		response = self.client.get(url)
+		
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.assertEqual(len(response.data), 1)
+		self.assertEqual(response.data[0]['username'], 'testuser2')
+
+	def test_online_status_after_login(self):
+		self.client.force_authenticate(user=None)
+		url = reverse('login')
+		data = {'username': 'testuser1', 'password': 'testpass123'}
+		
+		response = self.client.post(url, data)
+		
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.user1.refresh_from_db()
+		self.assertTrue(self.user1.is_online)
+
+	def test_online_status_after_logout(self):
+		user = User.objects.create_user(username='testuser', email='testuser@example.com', password='testpass123')
+		refresh = RefreshToken.for_user(user)
+		self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
+
+		url = reverse('logout')
+		response = self.client.post(url, {'refresh_token': str(refresh)})
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.user1.refresh_from_db()
+		self.assertFalse(self.user1.is_online)
+
+class UserSerializerTests(TestCase):
+	def setUp(self):
+		self.user1 = User.objects.create_user(username='testuser1', email='test1@example.com', password='testpass123')
+		self.user2 = User.objects.create_user(username='testuser2', email='test2@example.com', password='testpass123')
+		self.user1.friends.add(self.user2)
+
+	def test_user_serializer(self):
+		from users.serializers import UserSerializer
+		
+		serializer = UserSerializer(self.user1)
+		data = serializer.data
+		
+		self.assertEqual(data['username'], 'testuser1')
+		self.assertEqual(data['email'], 'test1@example.com')
+		self.assertIn('avatar', data)
+		self.assertIn('is_online', data)
+		self.assertEqual(len(data['friends']), 1)
+		self.assertEqual(data['friends'][0]['username'], 'testuser2')
+
+
+def create_image():
+	file = io.BytesIO()
+	image = Image.new('RGB', (100, 100), color='red')
+	image.save(file, 'png')
+	file.name = f'test_{timezone.now().timestamp()}.png'
+	file.seek(0)
+	return file
+
+class AvatarTests(TestCase):
+	def setUp(self):
+		self.client = APIClient()
+		self.user = User.objects.create_user(
+			username='testuser', 
+			email='test@example.com', 
+			password='testpass123'
+		)
+		self.client.force_authenticate(user=self.user)
+		self.url = reverse('upload-avatar')
+
+	@override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+	def test_successful_avatar_upload(self):
+		image = create_image()
+		response = self.client.post(self.url, {'avatar': image}, format='multipart')
+		
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.user.refresh_from_db()
+		self.assertTrue(self.user.avatar)
+		self.assertTrue(default_storage.exists(self.user.avatar.name))
+
+	@override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+	def test_invalid_file_type(self):
+		text_file = SimpleUploadedFile("test.txt", b"hello world", content_type="text/plain")
+		response = self.client.post(self.url, {'avatar': text_file}, format='multipart')
+		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+	def test_missing_avatar_field(self):
+		response = self.client.post(self.url, {}, format='multipart')
+		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+	@override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+	def test_update_existing_avatar(self):
+		# First upload
+		image1 = create_image()
+		response1 = self.client.post(self.url, {'avatar': image1}, format='multipart')
+		self.assertEqual(response1.status_code, status.HTTP_200_OK)
+		self.user.refresh_from_db()
+		old_avatar_path = self.user.avatar.path
+		old_avatar_name = os.path.basename(old_avatar_path)
+	
+		# Wait a bit to ensure file operations are complete
+		time.sleep(1)
+	
+		# Second upload
+		image2 = create_image()
+		response2 = self.client.post(self.url, {'avatar': image2}, format='multipart')
+		self.assertEqual(response2.status_code, status.HTTP_200_OK)
+	
+		# Wait a bit to ensure file operations are complete
+		time.sleep(1)
+	
+		self.user.refresh_from_db()
+		new_avatar_path = self.user.avatar.path
+		new_avatar_name = os.path.basename(new_avatar_path)
+	
+		self.assertNotEqual(old_avatar_name, new_avatar_name)
+		self.assertFalse(os.path.exists(old_avatar_path))
+		self.assertTrue(os.path.exists(new_avatar_path))
+
+	@classmethod
+	def tearDownClass(cls):
+		shutil.rmtree(settings.MEDIA_ROOT, ignore_errors=True)
+		super().tearDownClass()

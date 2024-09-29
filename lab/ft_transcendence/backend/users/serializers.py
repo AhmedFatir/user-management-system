@@ -3,13 +3,6 @@ from django.contrib.auth import authenticate, get_user_model, password_validatio
 
 User = get_user_model()
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'date_joined', 'last_login']
-        read_only_fields = ['date_joined', 'last_login']
-
-
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
@@ -101,3 +94,32 @@ class PasswordResetSerializer(serializers.Serializer):
             raise serializers.ValidationError("User with this email address does not exist.")
         return value
 
+
+class UserAvatarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['avatar']
+
+    def update(self, instance, validated_data):
+        if 'avatar' in validated_data:
+            instance.avatar = validated_data['avatar']
+            instance.save()
+        return instance
+
+
+class FriendRequestSerializer(serializers.Serializer):
+    username = serializers.CharField()
+
+
+class FriendSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'is_online']
+
+
+class UserSerializer(serializers.ModelSerializer):
+    friends = FriendSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'is_2fa_enabled', 'intra_id', 'first_name', 'last_name', 'avatar', 'is_online', 'date_joined', 'last_login', 'friends']

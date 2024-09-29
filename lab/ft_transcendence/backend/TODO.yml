@@ -2,14 +2,11 @@
 ✅   ◦ Users can subscribe to the website in a secure way.
 ✅   ◦ Registered users can log in in a secure way.
 ✅   ◦ Users can update their information.
-    ◦ Users can upload an avatar, with a default option if none is provided.
+✅   ◦ Users can upload an avatar, with a default option if none is provided.
+✅   ◦ Users can add others as friends and view their online status.
     ◦ Users can select a unique display name to play the tournaments.
-    ◦ Users can add others as friends and view their online status.
     ◦ User profiles display stats, such as wins and losses.
     ◦ Each user has a Match History including 1v1 games, dates, and relevant details, accessible to logged-in users.
-
-• Major module: Implementing a remote authentication.
-✅   ◦ OAuth2.0 with 42.
 
 • Major module: Live Chat.
     ◦ The user should be able to send direct messages to other users.
@@ -34,27 +31,30 @@
     ◦ Maintain clear and transparent communication with users regarding their data privacy rights,
         with easily accessible options to exercise these rights.
 
-• Major module: Two-Factor Authentication (2FA) and JWT.✅
-    ◦ Implement Two-Factor Authentication (2FA) as an additional layer of security for user accounts, 
+• Major module: Implementing a remote authentication.
+✅   ◦ OAuth2.0 with 42.
+
+• Major module: Two-Factor Authentication (2FA) and JWT.
+✅   ◦ Implement Two-Factor Authentication (2FA) as an additional layer of security for user accounts, 
         requiring users to provide a secondary verification method, such as a one-time code, in addition to their password.
-    ◦ Utilize JSON Web Tokens (JWT) as a secure method for authentication and authorization,
+✅   ◦ Utilize JSON Web Tokens (JWT) as a secure method for authentication and authorization,
         ensuring that user sessions and access to resources are managed securely.
-    ◦ Provide a user-friendly setup process for enabling 2FA, with options for SMS codes, 
+✅   ◦ Provide a user-friendly setup process for enabling 2FA, with options for SMS codes, 
         authenticator apps, or email-based verification.
-    ◦ Ensure that JWT tokens are issued and validated securely to prevent unauthorized access to user accounts and sensitive data.
+✅   ◦ Ensure that JWT tokens are issued and validated securely to prevent unauthorized access to user accounts and sensitive data.
 
- Major module: Infrastructure Setup with ELK (Elasticsearch, Logstash, Kibana)✅
-    ◦ Deploy Elasticsearch to efficiently store and index log data, making it easily searchable and accessible.
-    ◦ Configure Logstash to collect, process, and transform log data from various sources and send it to Elasticsearch.
-    ◦ Set up Kibana for visualizing log data, creating dashboards, and generating insights from log events.
-    ◦ Define data retention and archiving policies to manage the storage of log data effectively.
-    ◦ Implement security measures to protect log data and access to the ELK stack components.
+ Major module: Infrastructure Setup with ELK (Elasticsearch, Logstash, Kibana)
+✅   ◦ Deploy Elasticsearch to efficiently store and index log data, making it easily searchable and accessible.
+✅   ◦ Configure Logstash to collect, process, and transform log data from various sources and send it to Elasticsearch.
+✅   ◦ Set up Kibana for visualizing log data, creating dashboards, and generating insights from log events.
+✅   ◦ Define data retention and archiving policies to manage the storage of log data effectively.
+✅   ◦ Implement security measures to protect log data and access to the ELK stack components.
 
-• Minor module: Monitoring system.✅
-    ◦ Deploy Prometheus as the monitoring and alerting toolkit to collect metrics and monitor the health 
+• Minor module: Monitoring system.
+✅   ◦ Deploy Prometheus as the monitoring and alerting toolkit to collect metrics and monitor the health 
         and performance of various system components.
-    ◦ Configure data exporters and integrations to capture metrics from different services, databases, and infrastructure components.
-    ◦ Create custom dashboards and visualizations using Grafana to provide realtime insights into system metrics and performance.
-    ◦ Set up alerting rules in Prometheus to proactively detect and respond to critical issues and anomalies.
-    ◦ Ensure proper data retention and storage strategies for historical metrics data.
-    ◦ Implement secure authentication and access control mechanisms for Grafana to protect sensitive monitoring data.
+✅   ◦ Configure data exporters and integrations to capture metrics from different services, databases, and infrastructure components.
+✅   ◦ Create custom dashboards and visualizations using Grafana to provide realtime insights into system metrics and performance.
+✅   ◦ Set up alerting rules in Prometheus to proactively detect and respond to critical issues and anomalies.
+✅   ◦ Ensure proper data retention and storage strategies for historical metrics data.
+✅   ◦ Implement secure authentication and access control mechanisms for Grafana to protect sensitive monitoring data.
