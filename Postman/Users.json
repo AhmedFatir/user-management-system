@@ -1,8 +1,8 @@
 {
 	"info": {
 		"_postman_id": "e5444603-c680-4efc-bd10-1e98d7e20f06",
-		"name": "Profile",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"name": "Users",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "38553129"
 	},
 	"item": [
@@ -47,7 +47,16 @@
 						}
 					}
 				},
-				"url": "{{base_url}}/register/"
+				"url": {
+					"raw": "{{base_url}}/register/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"register",
+						""
+					]
+				}
 			},
 			"response": []
 		},
@@ -88,7 +97,16 @@
 						}
 					}
 				},
-				"url": "{{base_url}}/login/"
+				"url": {
+					"raw": "{{base_url}}/login/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"login",
+						""
+					]
+				}
 			},
 			"response": []
 		},
@@ -126,12 +144,22 @@
 						}
 					}
 				},
-				"url": "{{base_url}}/token/refresh/"
+				"url": {
+					"raw": "{{base_url}}/token/refresh/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"token",
+						"refresh",
+						""
+					]
+				}
 			},
 			"response": []
 		},
 		{
-			"name": "Get User Profile (No Authentication)",
+			"name": "Get Users (No Authentication)",
 			"event": [
 				{
 					"listen": "test",
@@ -154,12 +182,21 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "{{base_url}}/user/"
+				"url": {
+					"raw": "{{base_url}}/users/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						""
+					]
+				}
 			},
 			"response": []
 		},
 		{
-			"name": "Get User Profile (Invalid Token)",
+			"name": "Get Users (Invalid Token)",
 			"event": [
 				{
 					"listen": "test",
@@ -188,12 +225,59 @@
 						"type": "text"
 					}
 				],
-				"url": "{{base_url}}/user/"
+				"url": {
+					"raw": "{{base_url}}/users/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						""
+					]
+				}
 			},
 			"response": []
 		},
 		{
-			"name": "Get User Profile",
+			"name": "Get Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/users/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Admin Profile",
 			"event": [
 				{
 					"listen": "test",
@@ -223,7 +307,16 @@
 						"type": "text"
 					}
 				],
-				"url": "{{base_url}}/user/"
+				"url": {
+					"raw": "{{base_url}}/users/admin",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"users",
+						"admin"
+					]
+				}
 			},
 			"response": []
 		},
@@ -252,7 +345,16 @@
 						"type": "text"
 					}
 				],
-				"url": "{{base_url}}/delete-account/"
+				"url": {
+					"raw": "{{base_url}}/delete-account/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"delete-account",
+						""
+					]
+				}
 			},
 			"response": []
 		}

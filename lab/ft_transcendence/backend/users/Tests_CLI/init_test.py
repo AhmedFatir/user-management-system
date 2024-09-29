@@ -7,8 +7,9 @@ def clear_screen():
 def print_menu():
     clear_screen()
     print("=== Authentication System Test Suite ===")
-    print("1. Register")
-    print("2. Login")
+    print("0. Register")
+    print("1. Login")
+    print("2. Users")
     print("3. Logout")
     print("4. Password Reset")
     print("5. Password Update")
@@ -16,7 +17,7 @@ def print_menu():
     print("7. Delete Account")
     print("8. 2FA")
     print("9. OAuth with 42")
-    print("0. Exit")
+    print("e. Exit")
     print("=======================================")
 
 def run_test(script_name):
@@ -28,12 +29,14 @@ def run_test(script_name):
 def main():
     while True:
         print_menu()
-        choice = input("Enter your choice (0-9): ")
+        choice = input("Enter your choice (0-10): ")
         
-        if choice == '1':
+        if choice == '0':
             run_test('tests/register')
-        elif choice == '2':
+        elif choice == '1':
             run_test('tests/login')
+        elif choice == '2':
+            run_test('tests/users')
         elif choice == '3':
             run_test('tests/logout')
         elif choice == '4':
@@ -48,7 +51,7 @@ def main():
             run_test('tests/2FA')
         elif choice == '9':
             run_test('tests/42_OAuth')
-        elif choice == '0':
+        elif choice == 'e':
             print("Exiting. Goodbye!")
             break
         else:

@@ -10,60 +10,56 @@ from rest_framework_simplejwt.tokens import RefreshToken
 User = get_user_model()
 
 class RegistrationTestCase(TestCase):
-	def setUp(self):
-		self.client = APIClient()
-		self.register_url = reverse('register')
-		self.login_url = reverse('login')
-		self.user_url = reverse('user')
-		self.logout_url = reverse('logout')
-		self.user_data = {
-			'username': 'testuser',
-			'email': 'testuser@example.com',
-			'password': 'testpass123',
-			'password2': 'testpass123'
-		}
+    def setUp(self):
+        self.client = APIClient()
+        self.register_url = reverse('register')
+        self.user_data = {
+            'username': 'testuser',
+            'email': 'testuser@example.com',
+            'password': 'testpass123',
+            'password2': 'testpass123'
+        }
 
-	def test_registration(self):
-		response = self.client.post(self.register_url, self.user_data)
-		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-		self.assertIn('refresh', response.data)
-		self.assertIn('access', response.data)
-		self.assertIn('user', response.data)
-		self.assertEqual(User.objects.count(), 1)
-		self.assertEqual(User.objects.get().username, 'testuser')
+    def test_registration(self):
+        response = self.client.post(self.register_url, self.user_data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIn('refresh', response.data)
+        self.assertIn('access', response.data)
+        self.assertIn('user', response.data)
+        self.assertEqual(User.objects.count(), 1)
+        self.assertEqual(User.objects.get().username, 'testuser')
 
-	def test_registration_with_invalid_data(self):
-		invalid_data = self.user_data.copy()
-		invalid_data['password2'] = 'wrongpassword'
-		response = self.client.post(self.register_url, invalid_data)
-		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-		self.assertEqual(User.objects.count(), 0)
-	
-	def test_registration_with_existing_email(self):
-		User.objects.create_user(username='existinguser', email='testuser@example.com', password='testpass123')
+    def test_registration_with_invalid_data(self):
+        invalid_data = self.user_data.copy()
+        invalid_data['password2'] = 'wrongpassword'
+        response = self.client.post(self.register_url, invalid_data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(User.objects.count(), 0)
+    
+    def test_registration_with_existing_email(self):
+        User.objects.create_user(username='existinguser', email='testuser@example.com', password='testpass123')
 
-		# Then, try to register a new user with the same email
-		new_user_data = self.user_data.copy()
-		new_user_data['username'] = 'newuser'
-		response = self.client.post(self.register_url, new_user_data)
-		
-		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-		self.assertIn('email', response.data)
-		self.assertIn('already exists', str(response.data['email']).lower())
-		self.assertEqual(User.objects.count(), 1)  # Ensure no new user was created
+        new_user_data = self.user_data.copy()
+        new_user_data['username'] = 'newuser'
+        response = self.client.post(self.register_url, new_user_data)
+        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('email', response.data)
+        self.assertIn('already exists', str(response.data['email']).lower())
+        self.assertEqual(User.objects.count(), 1)  # Ensure no new user was created
 
-	def test_registration_with_existing_username(self):
-		User.objects.create_user(username='testuser', email='existinguser@example.com', password='testpass123')
+    def test_registration_with_existing_username(self):
+        User.objects.create_user(username='testuser', email='existinguser@example.com', password='testpass123')
 
-		# Then, try to register a new user with the same username
-		new_user_data = self.user_data.copy()
-		new_user_data['email'] = 'newuser@example.com'
-		response = self.client.post(self.register_url, new_user_data)
-		
-		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-		self.assertIn('username', response.data)
-		self.assertIn('already exists', str(response.data['username']).lower())
-		self.assertEqual(User.objects.count(), 1)  # Ensure no new user was created
+        new_user_data = self.user_data.copy()
+        new_user_data['email'] = 'newuser@example.com'
+        response = self.client.post(self.register_url, new_user_data)
+        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('username', response.data)
+        self.assertIn('already exists', str(response.data['username']).lower())
+        self.assertEqual(User.objects.count(), 1)  # Ensure no new user was created
+
 
 class LoginTestCase(TestCase):
 
@@ -92,35 +88,7 @@ class LoginTestCase(TestCase):
 		}
 		response = self.client.post(self.login_url, login_data)
 		self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-		
-class UserTestCase(TestCase):
-	
-	def setUp(self):
-		self.client = APIClient()
-		self.user_url = reverse('user')
 
-	def test_profile_authenticated(self):
-		# Create and authenticate a user
-		user = User.objects.create_user(username='testuser', email='testuser@example.com', password='testpass123')
-		refresh = RefreshToken.for_user(user)
-		self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
-
-		# Get the user profile
-		response = self.client.get(self.user_url)
-		self.assertEqual(response.status_code, status.HTTP_200_OK)
-		self.assertEqual(response.data['username'], 'testuser')
-		self.assertEqual(response.data['email'], 'testuser@example.com')
-
-	def test_profile_unauthenticated(self):
-		# Attempt to get the user profile without authentication
-		response = self.client.get(self.user_url)
-		self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-	def test_profile_invalid_token(self):
-		# Attempt to get the user profile with an invalid token
-		self.client.credentials(HTTP_AUTHORIZATION='Bearer invalidtoken123')
-		response = self.client.get(self.user_url)
-		self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 class LogoutTestCase(TestCase):
 
@@ -295,3 +263,58 @@ class ProfileUpdateTestCase(TestCase):
         }
         response = self.client.put(self.profile_update_url, data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class UserTestCase(TestCase):
+    
+    def setUp(self):
+        self.client = APIClient()
+        self.users_url = reverse('users')
+        self.user1 = User.objects.create_user(username='testuser1', email='testuser1@example.com', password='testpass123')
+        self.user2 = User.objects.create_user(username='testuser2', email='testuser2@example.com', password='testpass123')
+
+    def test_get_all_users_authenticated(self):
+        refresh = RefreshToken.for_user(self.user1)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
+
+        response = self.client.get(self.users_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)  # Assuming only the two users created in setUp
+
+    def test_get_all_users_unauthenticated(self):
+        response = self.client.get(self.users_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_specific_user_authenticated(self):
+        refresh = RefreshToken.for_user(self.user1)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
+
+        response = self.client.get(reverse('user-detail', kwargs={'username': 'testuser2'}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['username'], 'testuser2')
+        self.assertEqual(response.data['email'], 'testuser2@example.com')
+
+    def test_get_specific_user_not_found(self):
+        refresh = RefreshToken.for_user(self.user1)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
+
+        response = self.client.get(reverse('user-detail', kwargs={'username': 'nonexistentuser'}))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_specific_user_unauthenticated(self):
+        response = self.client.get(reverse('user-detail', kwargs={'username': 'testuser1'}))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_profile_invalid_token(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer invalidtoken123')
+        response = self.client.get(self.users_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_profile_authenticated(self):
+        refresh = RefreshToken.for_user(self.user1)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
+
+        response = self.client.get(reverse('user-detail', kwargs={'username': 'testuser1'}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['username'], 'testuser1')
+        self.assertEqual(response.data['email'], 'testuser1@example.com')

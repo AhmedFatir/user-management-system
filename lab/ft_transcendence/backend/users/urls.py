@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views.Register import RegisterView
 from .views.Login import LoginView
 from .views.Logout import LogoutView, DeleteAccountView
-from .views.Profile import UserView
+from .views.users import UsersView, UserDetailView
 from .views.Profile import ProfileUpdateView
 from .views.Passwords import PasswordResetView, PasswordChangeView
 from .views.TwoFactor import VerifyTwoFactorView, Enable2FAView, Verify2FAEnableView, Disable2FAView
@@ -16,8 +16,10 @@ urlpatterns = [
     
     path('login/', LoginView.as_view(), name="login"),
     path('register/', RegisterView.as_view(), name="register"),
+    path('users/', UsersView.as_view(), name="users"),
+    path('users/<str:username>/', UserDetailView.as_view(), name="user-detail"),
+
     path('logout/', LogoutView.as_view(), name="logout"),
-    path('user/', UserView.as_view(), name="user"),
     path('delete-account/', DeleteAccountView.as_view(), name="delete-account"),
     path('profile-update/', ProfileUpdateView.as_view(), name="profile-update"),
     
@@ -31,4 +33,5 @@ urlpatterns = [
     
     path('login/intra42/', IntraLoginView.as_view(), name='intra_login'),
     path('complete/intra42/', IntraCallbackView.as_view(), name='intra_callback'),
+
 ]
