@@ -9,6 +9,8 @@ from .views.Profile import ProfileUpdateView, AvatarUploadView
 from .views.Passwords import PasswordResetView, PasswordChangeView
 from .views.TwoFactor import VerifyTwoFactorView, Enable2FAView, Verify2FAEnableView, Disable2FAView
 from .views.Intra42 import IntraLoginView, IntraCallbackView
+from .views.Friends import FriendRequestView, FriendRequestResponseView, FriendListView
+from .views.Friends import FriendRequestListView, CancelFriendRequestView
 
 urlpatterns = [
     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -35,5 +37,11 @@ urlpatterns = [
 
     path('profile-update/', ProfileUpdateView.as_view(), name="profile-update"),
     path('upload-avatar/', AvatarUploadView.as_view(), name='upload-avatar'),
+
+    path('friend-request/<str:username>/', FriendRequestView.as_view(), name='friend-request'),
+    path('friend-response/<str:username>/', FriendRequestResponseView.as_view(), name='friend-response'),
+    path('cancel-friend-request/<str:username>/', CancelFriendRequestView.as_view(), name='cancel-friend-request'),
+    path('friends/', FriendListView.as_view(), name='friend-list'),
+    path('friend-requests/', FriendRequestListView.as_view(), name='friend-requests'),
 
 ]

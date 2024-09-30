@@ -11,6 +11,8 @@ class CustomUser(AbstractUser):
 	intra_id = models.CharField(max_length=100, unique=True, null=True, blank=True)
 	avatar = models.ImageField(upload_to='avatars/', default='default.jpg')
 	is_online = models.BooleanField(default=False)
+	friends = models.ManyToManyField('self', symmetrical=True, blank=True)
+	incoming_requests = models.ManyToManyField('self', symmetrical=False, related_name='outgoing_requests', blank=True)
 
 	def save(self, *args, **kwargs):
 		if self.pk:

@@ -123,8 +123,11 @@ class UserAvatarSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
-		fields = ['id', 'username', 'email', 'is_2fa_enabled', 'intra_id', 'first_name', 'last_name', 'avatar', 'is_online', 'date_joined', 'last_login']
-
+		fields = [
+			'id', 'username', 'email', 'is_2fa_enabled', 'intra_id',
+			'first_name', 'last_name', 'avatar', 'is_online', 'date_joined', 'last_login',
+			'friends', 'incoming_requests', 'outgoing_requests'
+		]
 		def get_avatar(self, obj):
 			if obj.avatar:
 				return self.context['request'].build_absolute_uri(obj.avatar.url)

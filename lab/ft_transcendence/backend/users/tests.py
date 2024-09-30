@@ -391,3 +391,119 @@ class AvatarTests(TestCase):
 		self.assertNotEqual(old_avatar_name, new_avatar_name)
 		self.assertFalse(os.path.exists(old_avatar_path))
 		self.assertTrue(os.path.exists(new_avatar_path))
+
+class FriendManagementTestCase(TestCase):
+	def setUp(self):
+		self.client = APIClient()
+		self.user1 = User.objects.create_user(username='user1', email='user1@example.com', password='testpass123')
+		self.user2 = User.objects.create_user(username='user2', email='user2@example.com', password='testpass123')
+		self.user3 = User.objects.create_user(username='user3', email='user3@example.com', password='testpass123')
+
+	def get_tokens_for_user(self, user):
+		refresh = RefreshToken.for_user(user)
+		return str(refresh.access_token)
+
+	def authenticate(self, user):
+		self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.get_tokens_for_user(user)}')
+
+	def test_send_friend_request(self):
+		self.authenticate(self.user1)
+		# response = self.client.post(reverse('friend-request', kwargs={'user_identifier': self.user2.id}))
+		response = self.client.post(reverse('friend-request', kwargs={'username': self.user2.username}))
+		self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+		self.assertTrue(self.user1 in self.user2.incoming_requests.all())
+		self.assertTrue(self.user2 in self.user1.outgoing_requests.all())
+
+	def test_send_friend_request_to_nonexistent_user(self):
+		self.authenticate(self.user1)
+		response = self.client.post(reverse('friend-request', kwargs={'username': 9999}))
+		self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+	def test_send_duplicate_friend_request(self):
+		self.authenticate(self.user1)
+		self.client.post(reverse('friend-request', kwargs={'username': self.user2.username}))
+		response = self.client.post(reverse('friend-request', kwargs={'username': self.user2.username}))
+		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+		self.assertEqual(response.data['error'], "Friend request already sent.")
+		self.assertTrue(self.user1 in self.user2.incoming_requests.all())
+		self.assertTrue(self.user2 in self.user1.outgoing_requests.all())
+
+	def test_accept_friend_request(self):
+		self.user2.incoming_requests.add(self.user1)
+		self.user1.outgoing_requests.add(self.user2)
+		self.authenticate(self.user2)
+		response = self.client.post(reverse('friend-response', kwargs={'username': self.user1.username}), {'action': 'accept'})
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.assertTrue(self.user1 in self.user2.friends.all())
+		self.assertTrue(self.user2 in self.user1.friends.all())
+		self.assertFalse(self.user1 in self.user2.incoming_requests.all())
+		self.assertFalse(self.user2 in self.user1.outgoing_requests.all())
+
+	def test_reject_friend_request(self):
+		self.user2.incoming_requests.add(self.user1)
+		self.user1.outgoing_requests.add(self.user2)
+		self.authenticate(self.user2)
+		response = self.client.post(reverse('friend-response', kwargs={'username': self.user1.username}), {'action': 'reject'})
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.assertFalse(self.user1 in self.user2.friends.all())
+		self.assertFalse(self.user2 in self.user1.friends.all())
+		self.assertFalse(self.user1 in self.user2.incoming_requests.all())
+		self.assertFalse(self.user2 in self.user1.outgoing_requests.all())
+
+	def test_invalid_friend_request_response(self):
+		self.user2.incoming_requests.add(self.user1)
+		self.authenticate(self.user2)
+		response = self.client.post(reverse('friend-response', kwargs={'username': self.user1.username}), {'action': 'invalid'})
+		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+	def test_cancel_friend_request(self):
+		self.user2.incoming_requests.add(self.user1)
+		self.user1.outgoing_requests.add(self.user2)
+		self.authenticate(self.user1)
+		response = self.client.post(reverse('cancel-friend-request', kwargs={'username': self.user2.username}))
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.assertFalse(self.user1 in self.user2.incoming_requests.all())
+		self.assertFalse(self.user2 in self.user1.outgoing_requests.all())
+
+	def test_cancel_nonexistent_friend_request(self):
+		self.authenticate(self.user1)
+		response = self.client.post(reverse('cancel-friend-request', kwargs={'username': self.user2.username}))
+		self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+	def test_get_friend_list(self):
+		self.user1.friends.add(self.user2)
+		self.authenticate(self.user1)
+		response = self.client.get(reverse('friend-list'))
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.assertEqual(len(response.data), 1)
+		self.assertEqual(response.data[0]['username'], 'user2')
+
+	def test_get_friend_requests(self):
+		self.user1.outgoing_requests.add(self.user2)
+		self.user2.incoming_requests.add(self.user1)
+		self.user3.outgoing_requests.add(self.user1)
+		self.user1.incoming_requests.add(self.user3)
+		self.authenticate(self.user1)
+		response = self.client.get(reverse('friend-requests'))
+		self.assertEqual(response.status_code, status.HTTP_200_OK)
+		self.assertEqual(len(response.data['incoming']), 1)
+		self.assertEqual(len(response.data['outgoing']), 1)
+		self.assertEqual(response.data['incoming'][0]['username'], 'user3')
+		self.assertEqual(response.data['outgoing'][0]['username'], 'user2')
+
+	def test_unauthenticated_access(self):
+		self.client.credentials()  # Clear authentication
+		response = self.client.get(reverse('friend-list'))
+		self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+		response = self.client.post(reverse('friend-request', kwargs={'username': self.user2.username}))
+		self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+		response = self.client.post(reverse('friend-response', kwargs={'username': self.user1.username}), {'action': 'accept'})
+		self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+		response = self.client.post(reverse('cancel-friend-request', kwargs={'username': self.user2.username}))
+		self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+		response = self.client.get(reverse('friend-requests'))
+		self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
