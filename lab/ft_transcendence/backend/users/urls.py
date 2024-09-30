@@ -11,6 +11,7 @@ from .views.TwoFactor import VerifyTwoFactorView, Enable2FAView, Verify2FAEnable
 from .views.Intra42 import IntraLoginView, IntraCallbackView
 from .views.Friends import FriendRequestView, FriendRequestResponseView, FriendListView
 from .views.Friends import FriendRequestListView, CancelFriendRequestView
+from .views.Friends import BlockUserView, UnblockUserView, BlockedUsersListView
 
 urlpatterns = [
     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -43,5 +44,9 @@ urlpatterns = [
     path('cancel-friend-request/<str:username>/', CancelFriendRequestView.as_view(), name='cancel-friend-request'),
     path('friends/', FriendListView.as_view(), name='friend-list'),
     path('friend-requests/', FriendRequestListView.as_view(), name='friend-requests'),
+
+    path('block-user/<str:username>/', BlockUserView.as_view(), name='block-user'),
+    path('unblock-user/<str:username>/', UnblockUserView.as_view(), name='unblock-user'),
+    path('blocked-users/', BlockedUsersListView.as_view(), name='blocked-users-list'),
 
 ]

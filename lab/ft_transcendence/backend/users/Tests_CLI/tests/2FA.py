@@ -143,7 +143,7 @@ def main():
         print("1. Enable 2FA")
         print("2. Disable 2FA")
         print("3. Test Login")
-        print("4. Exit")
+        print("q. Quit")
 
         choice = input("Enter your choice (1-4): ")
         print("="*30 + "\n")
@@ -160,7 +160,7 @@ def main():
                 print("2FA is already disabled.")
         elif choice == '3':
             tester.login()
-        elif choice == '4':
+        elif choice == 'q':
             print("Exiting...")
             break
         else:

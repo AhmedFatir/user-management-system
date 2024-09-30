@@ -53,7 +53,7 @@ def main():
         print("\nChoose an option:")
         print("1. Get all users")
         print("2. Get a specific user")
-        print("3. Exit")
+        print("q. Quit")
         
         choice = input("Enter your choice (1-3): ")
         
@@ -70,7 +70,7 @@ def main():
                 print("\n=======================================")
                 print(json.dumps(user, indent=2))
                 print("=======================================")
-        elif choice == '3':
+        elif choice == 'q':
             print("Exiting...")
             break
         else:

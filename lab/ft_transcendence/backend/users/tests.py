@@ -507,3 +507,104 @@ class FriendManagementTestCase(TestCase):
 
 		response = self.client.get(reverse('friend-requests'))
 		self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class BlockFeatureTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user1 = User.objects.create_user(username='user1', email='user1@example.com', password='testpass123')
+        self.user2 = User.objects.create_user(username='user2', email='user2@example.com', password='testpass123')
+        self.user3 = User.objects.create_user(username='user3', email='user3@example.com', password='testpass123')
+
+    def authenticate(self, user):
+        refresh = RefreshToken.for_user(user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
+
+    def test_block_user(self):
+        self.authenticate(self.user1)
+        response = self.client.post(reverse('block-user', kwargs={'username': self.user2.username}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(self.user2 in self.user1.blocked_users.all())
+
+    def test_block_nonexistent_user(self):
+        self.authenticate(self.user1)
+        response = self.client.post(reverse('block-user', kwargs={'username': 'nonexistentuser'}))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_block_self(self):
+        self.authenticate(self.user1)
+        response = self.client.post(reverse('block-user', kwargs={'username': self.user1.username}))
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_block_already_blocked_user(self):
+        self.authenticate(self.user1)
+        self.user1.blocked_users.add(self.user2)
+        response = self.client.post(reverse('block-user', kwargs={'username': self.user2.username}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)  # It's okay to block an already blocked user
+
+    def test_unblock_user(self):
+        self.authenticate(self.user1)
+        self.user1.blocked_users.add(self.user2)
+        response = self.client.post(reverse('unblock-user', kwargs={'username': self.user2.username}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(self.user2 in self.user1.blocked_users.all())
+
+    def test_unblock_not_blocked_user(self):
+        self.authenticate(self.user1)
+        response = self.client.post(reverse('unblock-user', kwargs={'username': self.user2.username}))
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_blocked_users_list(self):
+        self.authenticate(self.user1)
+        self.user1.blocked_users.add(self.user2, self.user3)
+        response = self.client.get(reverse('blocked-users-list'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+        self.assertIn(self.user2.username, [user['username'] for user in response.data])
+        self.assertIn(self.user3.username, [user['username'] for user in response.data])
+
+    def test_block_removes_friend(self):
+        self.user1.friends.add(self.user2)
+        self.authenticate(self.user1)
+        response = self.client.post(reverse('block-user', kwargs={'username': self.user2.username}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(self.user2 in self.user1.friends.all())
+        self.assertFalse(self.user1 in self.user2.friends.all())
+
+    def test_block_cancels_outgoing_friend_request(self):
+        self.user1.outgoing_requests.add(self.user2)
+        self.authenticate(self.user1)
+        response = self.client.post(reverse('block-user', kwargs={'username': self.user2.username}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(self.user2 in self.user1.outgoing_requests.all())
+
+    def test_block_cancels_incoming_friend_request(self):
+        self.user1.incoming_requests.add(self.user2)
+        self.authenticate(self.user1)
+        response = self.client.post(reverse('block-user', kwargs={'username': self.user2.username}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(self.user2 in self.user1.incoming_requests.all())
+
+    def test_cannot_send_friend_request_to_blocked_user(self):
+        self.authenticate(self.user1)
+        self.user1.blocked_users.add(self.user2)
+        response = self.client.post(reverse('friend-request', kwargs={'username': self.user2.username}))
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_cannot_send_friend_request_to_user_who_blocked_you(self):
+        self.authenticate(self.user1)
+        self.user2.blocked_users.add(self.user1)
+        response = self.client.post(reverse('friend-request', kwargs={'username': self.user2.username}))
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_unauthenticated_block_attempt(self):
+        response = self.client.post(reverse('block-user', kwargs={'username': self.user2.username}))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_unauthenticated_unblock_attempt(self):
+        response = self.client.post(reverse('unblock-user', kwargs={'username': self.user2.username}))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_unauthenticated_blocked_users_list_attempt(self):
+        response = self.client.get(reverse('blocked-users-list'))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

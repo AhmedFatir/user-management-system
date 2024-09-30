@@ -14,7 +14,8 @@ class FriendRequestView(APIView):
 		try:
 			to_user = User.objects.get(username=username)
 			from_user = request.user
-
+			if to_user in from_user.blocked_users.all() or from_user in to_user.blocked_users.all():
+				return Response({"error": "You can't send a friend request, BLOCKING ISSUES."}, status=status.HTTP_400_BAD_REQUEST)
 			if to_user in from_user.friends.all():
 				return Response({"error": "You are already friends with this user."}, status=status.HTTP_400_BAD_REQUEST)
 			if to_user in from_user.outgoing_requests.all():
@@ -94,3 +95,51 @@ class FriendRequestListView(APIView):
 			"incoming": incoming_serializer.data,
 			"outgoing": outgoing_serializer.data
 		})
+
+
+class BlockUserView(APIView):
+	permission_classes = (IsAuthenticated,)
+
+	def post(self, request, username):
+		try:
+			user_to_block = User.objects.get(username=username)
+			if user_to_block == request.user:
+				return Response({"error": "You cannot block yourself."}, status=status.HTTP_400_BAD_REQUEST)
+			
+			request.user.blocked_users.add(user_to_block)
+			
+			# Remove from friends if they were friends
+			request.user.friends.remove(user_to_block)
+			user_to_block.friends.remove(request.user)
+			
+			# Remove any existing friend requests
+			request.user.incoming_requests.remove(user_to_block)
+			request.user.outgoing_requests.remove(user_to_block)
+			user_to_block.incoming_requests.remove(request.user)
+			user_to_block.outgoing_requests.remove(request.user)
+			
+			return Response({"message": f"User {username} has been blocked."}, status=status.HTTP_200_OK)
+		except User.DoesNotExist:
+			return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+class UnblockUserView(APIView):
+	permission_classes = (IsAuthenticated,)
+
+	def post(self, request, username):
+		try:
+			user_to_unblock = User.objects.get(username=username)
+			if user_to_unblock not in request.user.blocked_users.all():
+				return Response({"error": "This user is not blocked."}, status=status.HTTP_400_BAD_REQUEST)
+			
+			request.user.blocked_users.remove(user_to_unblock)
+			return Response({"message": f"User {username} has been unblocked."}, status=status.HTTP_200_OK)
+		except User.DoesNotExist:
+			return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+class BlockedUsersListView(APIView):
+	permission_classes = (IsAuthenticated,)
+
+	def get(self, request):
+		blocked_users = request.user.blocked_users.all()
+		serializer = UserSerializer(blocked_users, many=True)
+		return Response(serializer.data)

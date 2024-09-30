@@ -13,6 +13,7 @@ class CustomUser(AbstractUser):
 	is_online = models.BooleanField(default=False)
 	friends = models.ManyToManyField('self', symmetrical=True, blank=True)
 	incoming_requests = models.ManyToManyField('self', symmetrical=False, related_name='outgoing_requests', blank=True)
+	blocked_users = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by', blank=True)
 
 	def save(self, *args, **kwargs):
 		if self.pk:

@@ -18,7 +18,7 @@ def print_menu():
     print("8. 2FA")
     print("9. OAuth with 42")
     print("f. Friends")
-    print("e. Exit")
+    print("q. Quit")
     print("=======================================")
 
 def run_test(script_name):
@@ -54,8 +54,8 @@ def main():
             run_test('tests/42_OAuth')
         elif choice == 'f':
             run_test('tests/friends')
-        elif choice == 'e':
-            print("Exiting. Goodbye!")
+        elif choice == 'q':
+            print("Quitting...")
             break
         else:
             input("Invalid choice. Press Enter to try again...")
