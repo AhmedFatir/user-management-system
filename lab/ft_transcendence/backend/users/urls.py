@@ -1,17 +1,17 @@
 from django.urls import path
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.views import TokenRefreshView
 
 from .views.Register import RegisterView
-from .views.Login import LoginView
+from .views.Login import LoginView, MyTokenObtainPairView
 from .views.Logout import LogoutView, DeleteAccountView
 from .views.users import UsersView, UserDetailView
-from .views.Profile import ProfileUpdateView, AvatarUploadView, FriendRequestView, FriendListView
+from .views.Profile import ProfileUpdateView, AvatarUploadView
 from .views.Passwords import PasswordResetView, PasswordChangeView
 from .views.TwoFactor import VerifyTwoFactorView, Enable2FAView, Verify2FAEnableView, Disable2FAView
 from .views.Intra42 import IntraLoginView, IntraCallbackView
 
 urlpatterns = [
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
     path('login/', LoginView.as_view(), name="login"),
@@ -35,7 +35,5 @@ urlpatterns = [
 
     path('profile-update/', ProfileUpdateView.as_view(), name="profile-update"),
     path('upload-avatar/', AvatarUploadView.as_view(), name='upload-avatar'),
-    path('send-friend-request/', FriendRequestView.as_view(), name='send-friend-request'),
-    path('friends/', FriendListView.as_view(), name='friend-list'),
 
 ]

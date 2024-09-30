@@ -323,82 +323,6 @@ class UserTestCase(TestCase):
         self.assertEqual(response.data['username'], 'testuser1')
         self.assertEqual(response.data['email'], 'testuser1@example.com')
 
-class FriendsTests(TestCase):
-	def setUp(self):
-		self.client = APIClient()
-		self.user1 = User.objects.create_user(username='testuser1', email='test1@example.com', password='testpass123')
-		self.user2 = User.objects.create_user(username='testuser2', email='test2@example.com', password='testpass123')
-		self.client.force_authenticate(user=self.user1)
-
-	def test_send_friend_request(self):
-		url = reverse('send-friend-request')
-		data = {'username': 'testuser2'}
-		
-		response = self.client.post(url, data)
-		
-		self.assertEqual(response.status_code, status.HTTP_200_OK)
-		self.user1.refresh_from_db()
-		self.assertTrue(self.user2 in self.user1.friends.all())
-
-	def test_send_friend_request_to_nonexistent_user(self):
-		url = reverse('send-friend-request')
-		data = {'username': 'nonexistentuser'}
-		
-		response = self.client.post(url, data)
-		
-		self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-	def test_friend_list(self):
-		self.user1.friends.add(self.user2)
-		url = reverse('friend-list')
-		
-		response = self.client.get(url)
-		
-		self.assertEqual(response.status_code, status.HTTP_200_OK)
-		self.assertEqual(len(response.data), 1)
-		self.assertEqual(response.data[0]['username'], 'testuser2')
-
-	def test_online_status_after_login(self):
-		self.client.force_authenticate(user=None)
-		url = reverse('login')
-		data = {'username': 'testuser1', 'password': 'testpass123'}
-		
-		response = self.client.post(url, data)
-		
-		self.assertEqual(response.status_code, status.HTTP_200_OK)
-		self.user1.refresh_from_db()
-		self.assertTrue(self.user1.is_online)
-
-	def test_online_status_after_logout(self):
-		user = User.objects.create_user(username='testuser', email='testuser@example.com', password='testpass123')
-		refresh = RefreshToken.for_user(user)
-		self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
-
-		url = reverse('logout')
-		response = self.client.post(url, {'refresh_token': str(refresh)})
-		self.assertEqual(response.status_code, status.HTTP_200_OK)
-		self.user1.refresh_from_db()
-		self.assertFalse(self.user1.is_online)
-
-class UserSerializerTests(TestCase):
-	def setUp(self):
-		self.user1 = User.objects.create_user(username='testuser1', email='test1@example.com', password='testpass123')
-		self.user2 = User.objects.create_user(username='testuser2', email='test2@example.com', password='testpass123')
-		self.user1.friends.add(self.user2)
-
-	def test_user_serializer(self):
-		from users.serializers import UserSerializer
-		
-		serializer = UserSerializer(self.user1)
-		data = serializer.data
-		
-		self.assertEqual(data['username'], 'testuser1')
-		self.assertEqual(data['email'], 'test1@example.com')
-		self.assertIn('avatar', data)
-		self.assertIn('is_online', data)
-		self.assertEqual(len(data['friends']), 1)
-		self.assertEqual(data['friends'][0]['username'], 'testuser2')
-
 
 def create_image():
 	file = io.BytesIO()
@@ -467,8 +391,3 @@ class AvatarTests(TestCase):
 		self.assertNotEqual(old_avatar_name, new_avatar_name)
 		self.assertFalse(os.path.exists(old_avatar_path))
 		self.assertTrue(os.path.exists(new_avatar_path))
-
-	@classmethod
-	def tearDownClass(cls):
-		shutil.rmtree(settings.MEDIA_ROOT, ignore_errors=True)
-		super().tearDownClass()

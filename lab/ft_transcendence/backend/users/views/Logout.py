@@ -30,5 +30,8 @@ class DeleteAccountView(APIView):
 
 	def delete(self, request):
 		user = request.user
+		name = user.username
+		token = RefreshToken.for_user(user)
+		token.blacklist()
 		user.delete()
-		return Response({"detail": "User account has been deleted."}, status=status.HTTP_204_NO_CONTENT)
+		return Response({"detail": f"{name}'s account has been deleted."}, status=status.HTTP_204_NO_CONTENT)

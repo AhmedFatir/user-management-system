@@ -5,9 +5,15 @@ from django.utils.translation import gettext as _
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib.auth import login
 
-from users.serializers import UserSerializer, LoginSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from users.serializers import UserSerializer, LoginSerializer, MyTokenObtainPairSerializer
+
 from users.models import TwoFactorCode
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 class LoginView(APIView):
 	permission_classes = (permissions.AllowAny,)
@@ -37,12 +43,13 @@ class LoginView(APIView):
 				'requires_2fa': True
 			}, status=status.HTTP_200_OK)
 		else:
+			login(request, user)
 			user.is_online = True
 			user.save()
 			refresh = RefreshToken.for_user(user)
 			return Response({
 				'refresh': str(refresh),
 				'access': str(refresh.access_token),
-				'user': UserSerializer(user).data,
+				'user': UserSerializer(user, context={'request': request}).data,
 				'requires_2fa': False
 			}, status=status.HTTP_200_OK)

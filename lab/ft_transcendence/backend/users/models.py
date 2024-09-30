@@ -1,7 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-import random, os
+import random, os, requests
 from django.utils import timezone
+from django.core.files.base import ContentFile
 
 
 class CustomUser(AbstractUser):
@@ -9,19 +10,27 @@ class CustomUser(AbstractUser):
 	is_2fa_enabled = models.BooleanField(default=False)
 	intra_id = models.CharField(max_length=100, unique=True, null=True, blank=True)
 	avatar = models.ImageField(upload_to='avatars/', default='default.jpg')
-	friends = models.ManyToManyField('self', symmetrical=False, related_name='friend_of')
 	is_online = models.BooleanField(default=False)
 
 	def save(self, *args, **kwargs):
 		if self.pk:
 			try:
-				old_avatar = CustomUser.objects.get(pk=self.pk).avatar
-				if old_avatar and self.avatar and old_avatar != self.avatar:
-					if os.path.isfile(old_avatar.path):
-						os.remove(old_avatar.path)
+				old_instance = CustomUser.objects.get(pk=self.pk)
+				if old_instance.avatar != self.avatar:
+					# Only delete the old avatar if it's not the default
+					if old_instance.avatar and old_instance.avatar.name != 'default.jpg':
+						if os.path.isfile(old_instance.avatar.path):
+							os.remove(old_instance.avatar.path)
 			except CustomUser.DoesNotExist:
 				pass
 		super().save(*args, **kwargs)
+
+	def set_avatar_from_url(self, url):
+		response = requests.get(url)
+		if response.status_code == 200:
+			# file_name = f"avatar_{self.id}.jpg"
+			file_name = f"{self.username}_{self.id}.jpg"
+			self.avatar.save(file_name, ContentFile(response.content), save=True)
 
 	def __str__(self):
 		return self.username

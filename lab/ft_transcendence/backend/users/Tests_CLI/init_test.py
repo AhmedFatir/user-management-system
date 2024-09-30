@@ -13,7 +13,7 @@ def print_menu():
     print("3. Logout")
     print("4. Password Reset")
     print("5. Password Update")
-    print("6. User Update")
+    print("6. Profile Update")
     print("7. Delete Account")
     print("8. 2FA")
     print("9. OAuth with 42")
@@ -44,7 +44,7 @@ def main():
         elif choice == '5':
             run_test('tests/pass_update')
         elif choice == '6':
-            run_test('tests/user_update')
+            run_test('tests/profile')
         elif choice == '7':
             run_test('tests/delete')
         elif choice == '8':

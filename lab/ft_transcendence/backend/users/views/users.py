@@ -14,7 +14,7 @@ class UsersView(APIView):
 
     def get(self, request):
         users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
+        serializer = UserSerializer(users, many=True, context={'request': request})
         return Response(serializer.data)
 
 class UserDetailView(APIView):
@@ -23,7 +23,7 @@ class UserDetailView(APIView):
     def get(self, request, username):
         try:
             user = User.objects.get(username=username)
-            serializer = UserSerializer(user)
+            serializer = UserSerializer(user, context={'request': request})
             return Response(serializer.data)
         except User.DoesNotExist:
             return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
