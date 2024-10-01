@@ -5,11 +5,11 @@ User = get_user_model()
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        token['username'] = user.username
-        return token
+	@classmethod
+	def get_token(cls, user):
+		token = super().get_token(user)
+		token['username'] = user.username
+		return token
 
 
 class LoginSerializer(serializers.Serializer):
@@ -124,10 +124,11 @@ class UserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
 		fields = [
-			'id', 'username', 'email', 'is_2fa_enabled', 'intra_id',
-			'first_name', 'last_name', 'avatar', 'is_online', 'date_joined', 'last_login',
-			'friends', 'incoming_requests', 'outgoing_requests'
+			'id', 'intra_id', 'username', 'email','first_name', 'last_name', 
+			'avatar', 'is_2fa_enabled', 'is_online', 'date_joined', 'last_login',
+			'friends', 'incoming_requests', 'outgoing_requests', 'blocked_users'
 		]
+		read_only_fields = ['id', 'date_joined', 'last_login']
 		def get_avatar(self, obj):
 			if obj.avatar:
 				return self.context['request'].build_absolute_uri(obj.avatar.url)

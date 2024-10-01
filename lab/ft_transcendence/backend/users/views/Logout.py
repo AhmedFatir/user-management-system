@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework.permissions import IsAuthenticated
+import os
 
 class LogoutView(APIView):
 	permission_classes = (IsAuthenticated,)
@@ -31,7 +32,16 @@ class DeleteAccountView(APIView):
 	def delete(self, request):
 		user = request.user
 		name = user.username
-		token = RefreshToken.for_user(user)
-		token.blacklist()
+
+		user.friends.clear()
+		user.incoming_requests.clear()
+		user.outgoing_requests.clear()
+		user.blocked_users.clear()
+
+		if user.avatar and user.avatar.name != 'default.jpg':
+			if os.path.isfile(user.avatar.path):
+				os.remove(user.avatar.path)
+
+		RefreshToken.for_user(user).blacklist()
 		user.delete()
-		return Response({"detail": f"{name}'s account has been deleted."}, status=status.HTTP_204_NO_CONTENT)
+		return Response({"detail": f"{name}'s account and all associated data have been permanently deleted."}, status=status.HTTP_204_NO_CONTENT)

@@ -17,6 +17,7 @@ def print_menu():
     print("7. Delete Account")
     print("8. 2FA")
     print("9. OAuth with 42")
+    print("g. GDPR")
     print("f. Friends")
     print("q. Quit")
     print("=======================================")
@@ -52,6 +53,8 @@ def main():
             run_test('tests/2FA')
         elif choice == '9':
             run_test('tests/42_OAuth')
+        elif choice == 'g':
+            run_test('tests/gdpr')
         elif choice == 'f':
             run_test('tests/friends')
         elif choice == 'q':
