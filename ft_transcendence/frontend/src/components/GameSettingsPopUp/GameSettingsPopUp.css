@@ -1,0 +1,92 @@
+.gameSettings-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    padding: 20px;
+    background-color: #1C1E27;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.gameSettings-container h1 {
+    color: azure;
+    margin: 10px;
+}
+
+.backgrounds-container,
+.paddle-colors-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.background-image {
+    width: 300px;
+    height: 167px;
+    margin: 10px;
+}
+
+.paddle-color-preview {
+    width: 208px;
+    height: 16px;
+    margin: 0 10px;
+    border-radius: 10px;
+    transition: background-color 0.5s ease;
+}
+
+.cancel-button {
+    padding: 10px 20px;
+    background-color: #F62943;
+    color: white;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    margin: 20px;
+    transition: background-color 0.5s ease;
+    width: 200px;
+    height: 50px;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.cancel-button:hover {
+    background-color: #d32f2f;
+}
+
+.tools {
+    background-color: #242631;
+    width: auto;
+    height: auto;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 21px;
+}
+
+.tools h2 {
+    color: azure;
+}
+.keys-selection img {
+    width: 50px;
+    height: 40px;
+    margin: 5px;
+}
+.gameSettings-container .keys-selection  {
+    display: flex;
+}
+
+.gameSettings-container .keys-selection .container {
+    display: flex;
+    flex-direction: column;
+    margin: 8px;
+
+}

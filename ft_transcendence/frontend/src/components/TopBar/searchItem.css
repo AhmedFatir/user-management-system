@@ -1,0 +1,30 @@
+.SearchItem-container{
+    height: 60px;
+    display: flex;
+    border-bottom: solid 1px black;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.SearchItem-container:last-child{
+    border-bottom: none;
+}
+.SearchItem-container:hover{
+    background-color: var(--bg-body);
+}
+
+
+.search-image{
+    height: 50px;
+    width: 50px;
+}
+
+.search-image img {
+    width: 50px;
+    height: 50px;
+}
+
+.search-name{
+    padding-left: 10px;
+}

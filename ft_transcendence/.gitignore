@@ -1,0 +1,46 @@
+/env
+.DS_Store
+.env.database
+chat_images/*
+
+# Python bytecode files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django specific files
+# *.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Virtual environment
+evn/
+venv/
+myenv/
+env_test/
+ENV/
+env/
+env.bak/
+*.env
+
+# Editor/IDE specific files
+*.idea/
+.vscode/
+*.swp
+*~
+*.sublime-project
+*.sublime-workspace
+
+# macOS specific files
+.DS_Store
+
+# Static file compilation
+staticfiles/
+node_modules/
+
+# Media files
+

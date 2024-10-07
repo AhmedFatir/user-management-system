@@ -1,0 +1,26 @@
+
+.blockHolder{
+    width: 20rem;
+    height: 8rem;
+    background-color:#1C1E27;
+    border-radius: 1rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 2rem 1fr;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    position: absolute;
+    bottom: 600%;
+
+}
+.cantContact{
+    color: #F62943;
+}
+
+.Blocktitle{
+    font-weight: 1rem;
+    font-size: 1rem;
+    word-spacing: 5px;
+    align-self: end;
+}

@@ -1,0 +1,37 @@
+.listBlockerItem{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    background: #1C1E27;
+
+}
+
+.blockedImageName{
+    display: flex;
+    align-items: center;
+    gap : 10px
+}
+
+.unblockUserButton{
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.unblockUserButton button{
+    border: none;
+  padding: 10px 20px;
+  color: white;
+  cursor: pointer;
+    background-color: none;
+    background: transparent;
+  border: 1px solid #2C3143;
+}
+
+.unblockUserButton button:hover{
+
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+.listFriendCard{
+    display: flex;
+    align-items: center;
+    /* padding: 10px; */
+    padding-left: 15px;
+    width: 100%;
+    height: 70px;
+    cursor: pointer;
+    /* border-bottom: solid 1px #11141B; */
+}
+
+.listFriendCard:hover{
+    background-color: var(--bg-body);
+    transition: 0.3s;
+}
+
+.listFriendCard:last-child{
+    border-bottom: none;
+}
+
+
+.firendImage{
+    position: relative;
+    width: 56px;
+    height: 56px;
+}
+
+.FriendStatus{
+    position: absolute;
+    bottom: 0px;
+    right: 0;
+    width: 15px;
+    height: 15px;
+}
+.firendImage img{
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    
+}
+
+.firendImage .offline{
+    filter: grayscale(90%);
+}
+
+.FriendNameRand{
+    padding-left: 15px;
+}
+
+.FriendName{
+    /* padding-bottom: 5px; */
+}
+
+.listFriendCard p{
+    font-family: "Rajdhani", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 16px;
+}
+
+.FriendRank p{
+    font-size: 12px;
+}

@@ -1,0 +1,83 @@
+
+.buttonContainer {
+    /* height: 65px; */
+    align-self: flex-end;
+    border: 1px solid green;
+    padding: 10px;
+    /* width: 342px; */
+    background: rgba(22, 22, 37, 0.05);
+    border: 1px solid #2C3143;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 100px rgba(0, 0, 0, 0.25);
+}
+
+
+
+.SubmitContainer {
+    background-color: #F62943;
+    color: #FFFFFF;
+}
+
+
+.SubmitButtonPrimary {
+    outline: none;
+    border: none;
+    cursor: pointer;
+    font-family: "Rajdhani", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    color: #FFFFFF;
+    letter-spacing: 0.05rem;
+    /* border: 1px solid #fff; */
+    padding: 0.8rem 10rem;
+    background: url('https://svgshare.com/i/1975.svg') ;
+    background-size: 130%;
+    background-position: 500%;
+    background-repeat: no-repeat;
+    transition: 0.3s ease-in-out;
+    transition-property: background-position, border, color;
+    position: relative;
+}
+
+
+
+
+.SubmitButtonPrimary:hover {
+    /* border: 1px solid #FF4655; */
+    color: white;
+    background-position: 50%;
+    color: black;
+}
+
+.SubmitButtonPrimary::before {
+    content: '';
+    position: absolute;
+    background-color: #11141B;
+    width: 0.4rem; 
+    height: 0.4rem;
+    top : -1px;
+    left: -1px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* .SubmitButtonPrimary:hover::before {
+    background-color: #ECE9E3;
+
+} */
+
+.SubmitButtonPrimary::after {
+    content: '';
+    position: absolute;
+    background-color: #11141B;
+    width: 0.4rem; 
+    height: 0.4rem;
+    bottom : -1px;
+    right: -1px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+
+.buttonBorders {
+    /* padding: 10px;
+    border: 1px solid gold; */
+}

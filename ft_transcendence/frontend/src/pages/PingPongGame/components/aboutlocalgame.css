@@ -1,0 +1,46 @@
+.about-local-game-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 900px;
+    height: auto;
+    max-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1000;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.local-players {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.player , .timer {
+    padding: 60px;
+}
+
+.player .player-username {
+    text-align: center;
+    color: white;  
+}
+
+.timer {
+    color: white;
+    font-size: 96px;
+    font-weight: 600;
+}
+.game-info-title {
+    color: white;
+}
+
+.player-name {
+    color: #F62943;
+    font-weight: bold;
+}

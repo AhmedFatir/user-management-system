@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Jockey+One&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Saira+Semi+Condensed:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+.game-info-container {
+    margin-top: 30px;
+    background-color: rgba(44, 49, 67, 0.8);
+    display: flex;
+    width: auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.game-info-title {
+    text-align: center;
+    font-family: "Jockey One";
+    font-weight: 400;
+}
+
+.rules-container {
+    margin: 10px;
+}
+
+.rule-item {
+    text-decoration: none;
+    color: #ffffff;
+    list-style: none;
+    font-family: "Jockey One";
+    font-size: 16px;
+    font-weight: 400;
+}

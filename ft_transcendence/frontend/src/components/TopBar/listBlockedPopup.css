@@ -1,0 +1,87 @@
+.modal-listBlocked {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.6); 
+    z-index: 1000;
+  }
+  
+  .modal-blocked {
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 600px;
+    color: #FFFFFF; 
+    padding: 30px;
+
+    width: 500px; 
+    box-sizing: border-box;
+    background: #11141B;
+    border: 1px solid #2C3143;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 100px rgba(0, 0, 0, 0.25);
+  }
+  
+  .modal-blocked  h2 {
+    color: #FFFFFF; 
+    margin-top: 20px;
+    padding: 10px;
+    height: 100px;
+  }
+  
+  .modal-blocked  p {
+    font-size: 16px; 
+    line-height: 1.5;
+    height: 100px;
+  }
+  
+  /* .modal-blocked button {
+    background-color: #F62943; 
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+  }
+   */
+  /* .modal-blocked  button:hover {
+    background-color: #FF4757; 
+  }
+  
+  .modal-blocked  button:last-child {
+    margin-right: 0;
+  }
+  
+  .buttuns{
+    display: flex;
+    justify-content: space-around; 
+  } */
+  .modal-close-button {
+    position: absolute;
+    top: 10px; 
+    right: 15px; 
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    background-color: none;
+    outline: none; 
+  }
+  
+
+.listBlocked{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 80%;
+    gap: 10px;
+
+}

@@ -1,0 +1,171 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.6); 
+  z-index: 1000;
+}
+
+.modal {
+  position: relative; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #11141B;
+  border: 1px solid #2C3143;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 100px rgba(0, 0, 0, 0.25);
+  color: #FFFFFF; 
+  padding: 20px;
+  height: 350px;
+  width: 1000px; 
+  justify-content: space-between;
+}
+
+.modal h2 {
+  color: #FFFFFF; 
+  height: 60px;
+  margin-bottom: 40px;
+}
+
+.typeNotif{
+  color: #FFFFFF; 
+  height: 60px;
+  margin-bottom: 20px;
+}
+
+.TounoumentTitle{
+  color: #FFFFFF; 
+  height: 60px;
+  margin-bottom: 20px;
+}
+
+.popup-item{
+  width: 150px;
+  height: 60px;
+}
+
+.modal .NotifMessage {
+  font-size: 16px; 
+  line-height: 1.5;
+  height: 100px;
+}
+
+.modal .buttonA {
+  border: none;
+  padding: 10px 20px;
+  color: white;
+  cursor: pointer;
+  width: 47%;
+  border: 1px solid #2C3143;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 100px rgba(0, 0, 0, 0.25);
+  transition: background-color 0.3s ease;
+}
+
+.modal .buttonA:hover {
+  background-color: #FF4757; 
+}
+
+.modal .buttonA:last-child {
+  margin-right: 0;
+}
+
+.buttunsAR{
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  gap : 40px
+}
+
+.modalCloseButton {
+  position: absolute;
+  top: 10px; 
+  right: 15px; 
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  background-color: none;
+  outline: none; 
+}
+
+.NotifUserImageName-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-size: cover;
+  background-position: center;
+}
+
+.NotifUserImageName{
+  display: flex;
+
+}
+
+.NotifUserImageName img{
+  width: 50px;
+  height: 50px;
+}
+
+.NotiddName{
+  display: flex;
+  flex-direction: column;
+
+  padding-left: 10px;
+}
+.NotiddName p{
+  /* font-weight: bold; 
+  font-size: 1.2em;
+  color: #4A90E2;
+  cursor: pointer; */
+}
+
+.NotiddName p:hover {
+  /* text-decoration: underline;  */
+}
+
+.NotifUserImageNameAchievment{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  border: solid;
+}
+
+.NotifMessageAchievment {
+  padding: 20px;
+  font-weight: bold; 
+  font-size: 1.2em;
+}
+
+.AchivmentTitleDes{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.WinRate{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Accept{
+  background-color: #F62943; 
+}
+
+.Reject{
+  background-color: #1C1E27;
+}
+

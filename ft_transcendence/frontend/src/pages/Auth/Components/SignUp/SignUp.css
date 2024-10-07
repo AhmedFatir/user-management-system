@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Jockey+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+.signup-container {
+    /* border: 1px solid green; */
+    height: 100%;
+}
+
+
+.signup-container h1 {
+    font-family: "Jockey One", sans-serif;
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 89px;
+    color: #FFFFFF;
+    /* border: 1px solid red; */
+    margin-bottom: 30px;
+}
+
+
+.signup-avatar-section {
+
+}
+
+
+
+.signup-avatar-section h3 {
+    font-family: "Jockey One", sans-serif;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 45px;
+    color: #FFFFFF;
+    margin-bottom: 20px;
+}
+
+.signup-avatar-section .signup-avatar-list {
+    /* border: 1px solid pink; */
+    display: flex;
+    align-items: center;
+    /* justify-content: space-between; */
+    /* width: 80%; */
+    gap: 50px;
+    margin-bottom: 30px;
+}
+
+.signup-avatar-section .signup-avatar-list img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    /* border: 3px solid red; */
+}
+
+.active-avatar {
+    border: 3px solid #F62943;
+}
+
+.signup-input-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+ .signup-input {
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    justify-content: center;
+    width: 680px;
+
+}
+ .signup-input input {
+    height: 65px;
+    /* width: 620px; */
+    width: 100%;
+    padding: 0 10px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: #8D93AC;
+    font-family: "Poppins", sans-serif;
+    background-color: hsl(227, 14%, 19%);
+}
+ .signup-input input::placeholder {
+    color: #8D93AC;
+}
+
+.signup-submit-section {
+    display: flex;
+    flex-direction: column;
+    width: 680px;
+    gap: 20px;
+}
+
+
+
+.signup-submit-section button {
+    height: 65px;
+    font-family: 'Jockey One';
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 56px;
+    color: #FFFFFF;
+    background-color: #F62943;
+    cursor: pointer;
+    border: none;
+}
+
+.signup-switch {
+    width: 680px;
+    height: 65px;
+    font-family: 'Jockey One';
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 56px;
+    color: #FFFFFF;
+    background-color: #F62943;
+    cursor: pointer;
+    border: none;
+}
+
+.signup-input span {
+    margin-top: 5px;
+    font-family: 'Rajdhani';
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 17px;
+    color: #F62943;
+    display: none;
+}
+
+
+.signup-input input:invalid[focused="true"] ~ span {
+    display: block;
+}
+
+.signup-input input:invalid[focused="true"] {
+    border: 1px solid red;
+}
+
+.upload-input {
+    display: none;
+}

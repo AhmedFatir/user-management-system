@@ -1,0 +1,210 @@
+:root {
+    --bg-color: #11141B;
+    --modal-bg: rgba(22, 22, 37, 0.05);
+    --border-color: #2C3143;
+    --text-color: white;
+    --icon-bg: rgba(128, 128, 128, 0.1);
+  }
+/*   
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+   */
+  .MyContainer {
+    /* height: 100vh;
+    width: 100vw; */
+    /* display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-color); */
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.6); 
+    z-index: 1000;
+  }
+  
+  .TwoFaModalContainer {
+
+    position: relative; 
+    /* display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #11141B;
+    border: 1px solid #2C3143;
+    color: #FFFFFF; 
+    padding: 20px;
+    height: 350px;
+    width: 1000px; 
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 100px rgba(0, 0, 0, 0.25);
+    justify-content: space-between; */
+    
+
+    /* background-color: var(--modal-bg); */
+    background-color: #11141B;
+    width: min(40%, 700px);
+    height: 65%;
+    border-radius: 50px;
+    border: 1px solid var(--border-color);
+    /* box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 100px rgba(0, 0, 0, 0.25); */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    box-sizing: border-box;
+  }
+  
+  .TwoFaModalHead {
+    text-align: center;
+    color: var(--text-color);
+  }
+  
+  .TwoFaIcon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    padding: 15px;
+    background-color: var(--icon-bg);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 0px 4px 100px rgba(0, 0, 0, 0.25);
+    /* margin-bottom: 15px; */
+  }
+  
+  .TwoFaModalHead h1 {
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .TwoFaModalHead p {
+    font-size: 15px;
+    font-weight: 400;
+    max-width: 80%;
+    margin: 0 auto;
+  }
+  
+  .TwoFaBody {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* border: 1px solid red; */
+  }
+  
+  .qrcodeContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--modal-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 30px;
+    padding: 20px;
+    margin: 2rem 0;
+  }
+  
+  .qrcodeContainer img {
+    max-width: 100%;
+    min-width: 200px;
+    width: 300px;
+    height: auto;
+  }
+  
+  .TwoFaBottom {
+    width: 100%;
+    /* text-align: center; */
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* border: 1px solid red; */
+  }
+
+  .otp-card-input {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+
+
+ .otp-card-input input {
+    width: 60px;
+    height: 60px;
+    border: none;
+    outline: none;
+    padding: 0 1rem;
+    text-align: center;
+    background: rgba(128, 128, 128, 0.1);
+    color: #fff;
+
+
+ }
+
+ .otp-card-input input:focus {
+    outline: 2px solid #F62943;
+    border-color: transparent;
+ }
+
+
+.setup-button {
+    width: 70%;
+    height: 50px;
+    border: none;
+    /* border-radius: 20px; */
+    background-color: #F62943;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+
+}
+
+.setup-button:hover {
+    background-color: #F62943;
+    transform: scale(1.05);
+}
+
+.TwoFaBottom button[disabled] {
+    opacity: .6;
+    cursor: default;
+
+}
+
+
+
+.close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.cancelCircle {
+  width: 35px;
+  height: 35px;
+  color: var(--border-color);
+}
+
+.close-button:hover .cancelCircle {
+  color: #F62943;
+}
+
+@media (max-width: 768px) {
+    .TwoFaModalContainer {
+        width: 90%;
+        height: auto;
+      min-height: 70%;
+    }
+  }

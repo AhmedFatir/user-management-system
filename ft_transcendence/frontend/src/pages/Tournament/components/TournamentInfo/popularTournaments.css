@@ -1,0 +1,51 @@
+.PopularTournamentsItemConatiner{
+    display: flex;
+    flex-direction: column;
+    border: solid #1C1E27 4px;
+    border-radius: 15px;
+    width: 300px;
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+
+}
+
+.PopularTournamentsItem{
+    width: 100%;
+    height: 60%;
+
+}
+
+.PopularTournamentsItem h3{
+    text-align: center;
+    padding-top: 10px;
+}
+
+.tounametInfo{
+
+    width: 100%;
+    height: 40%;
+
+}
+
+.tournament-content{
+    display: flex;
+    flex-direction: column;
+}
+
+.tournament-content h4{
+    text-align: center;
+}
+
+.WinerImageName{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 30px;
+}
+.WinerImageName img{
+    border: solid;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}

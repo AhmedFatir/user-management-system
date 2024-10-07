@@ -1,0 +1,484 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Jockey+One&family=Saira+Semi+Condensed:wght@100;200;300;400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+/* Game Area Styles */
+.gameArea {
+    margin-top: 30px;
+    display: flex;
+    /* overflow: scroll; */
+}
+
+.gameComponent {
+    cursor: pointer;
+    padding: 10px;
+    margin: 10px;
+    transition: transform 0.3s, border-bottom 0.1s;
+}
+
+.gameLogo, .gameTitle {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.gameTitle {
+    margin-left: 10px;
+}
+
+.selected {
+    border-bottom: 2px solid #C6C8CF;
+}
+
+.gameComponent:hover {
+    transform: scale(0.95);
+}
+
+/* Ping Pong Styles */
+.PingPong-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #1C1E27;
+    margin-top: 35px;
+    margin-left: 10px;
+    width: 99%;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.PingPong-container .game-customisation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.PingPong-container .tools-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+}
+
+/* Game Background Styles */
+.areas-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.areas-container .areas-title {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.areas-container .underground-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.areas-container .underground {
+    width: 30%;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.image-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.image-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(115, 115, 115, 0.7);
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 550;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.underground.selectedUnderground {
+    animation: pulse 1s infinite;
+}
+
+
+.underground:hover {
+    animation: pulse 1s infinite;
+}
+
+/* Tools Container Styles */
+.toolsContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    background-color: #1C1E27;
+    border-radius: 21px;
+}
+
+.keys-container, .paddle-container {
+    /* width: auto; */
+    padding: 20px 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+/* Keys Styles */
+.keys-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.keys-container .keys-selection {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.keys-container .keys-title {
+    margin-bottom: 10px;
+}
+
+.keys-container .container {
+    background-color: #11141B;
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s ease;
+    padding: 10px;
+}
+
+.keys-container .container .key {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2A2D3A;
+    border-radius: 5px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.container.selectedOption {
+    border: 2px solid #F62943;
+    animation: pulse 1s infinite;
+    box-shadow: 0 0 10px rgba(246, 41, 67, 0.3);
+}
+
+/* Paddle Styles */
+.paddle-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.paddle-container h2 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.paddle-container .paddle-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.paddle-container .paddle-display {
+    width: 200px;
+    height: 21px;
+    border-radius: 10.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+@keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(3deg); }
+    75% { transform: rotate(-3deg); }
+}
+
+.paddle-display:hover {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    animation: pulse 0.8s infinite;
+}
+
+.paddle-display.selected {
+    border: 1px solid white;
+    animation: pulse 1s infinite;
+}
+
+/* Game Mode Styles */
+.gameModeContainer {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background-color: #1C1E27;
+    border-radius: 21px;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.gameModeContainer .title {
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+.mode-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.arrow-icon {
+    width: 20px;
+    height: 35px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.arrow-icon:hover {
+    transform: scale(1.1);
+}
+
+.mode-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.mode-image-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #11141B;
+    border-radius: 19px;
+    width: 155px;
+    height: 97px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.mode-image {
+    width: 65px;
+    height: 65px;
+    transition: transform 0.3s ease;
+}
+
+.mode-title {
+    color: #F62943;
+    font-size: 24px;
+    text-align: center;
+}
+
+/* Launch Game Button Styles */
+.launchButtons-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.launchButtons-container .buttons {
+    background-color: #F62943;
+    width: 357px;
+    height: 65px;
+    color: #FFFFFF;
+    font-size: 32px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.launchButtons-container .buttons:hover {
+    background-color: #D41F3A;
+    transform: scale(0.98);
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    max-width: 700px;
+    width: 90%;
+    background: #1C1E27;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.modal-content .modal-message {
+    font-size: 25px;
+    color: #C6C8CF;
+}
+
+/* Player Selection Styles */
+.player-selection-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.player-selection {
+    max-width: 830px;
+    width: 90%;
+    max-height: 75vh;
+    background: #11141B;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+    overflow-y: auto;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.player-selection h2 {
+    margin-bottom: 20px;
+    font-size: 32px;
+}
+
+.player-selection ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.player-selection li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #1C1E27;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.player-selection .player-info {
+    display: flex;
+    align-items: center;
+}
+
+.player-selection .player-name {
+    font-size: 24px;
+    font-weight: 500;
+    margin-left: 20px;
+}
+
+.player-selection .player-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.player-selection .player-challenge {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #8D93AC;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.player-selection .player-challenge:hover {
+    color: #F62943;
+}
+
+.player-selection .cancel {
+    background-color: #F62943;
+    color: #FFFFFF;
+    font-size: 24px;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.player-selection .cancel:hover {
+    background-color: #D41F3A;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .PingPong-container {
+        width: 90%;
+    }
+
+    .PingPong-container .game-customisation {
+        flex-direction: column;
+    }
+
+    .underground-container {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .areas-container .underground  {
+        width: 80%;
+    }
+
+    .PingPong-container .tools-section {
+        flex-direction: column;
+        gap: 1px;
+    }
+
+    .launchButtons-container {
+        position: static;
+        margin-top: 30px;
+    }
+}

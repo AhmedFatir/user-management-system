@@ -1,0 +1,27 @@
+.achievements-popup {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 1000;
+  }
+  
+  .achievement {
+    text-align: center;
+  }
+  
+  .achievement h3 {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  .achievement p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+  }
+  

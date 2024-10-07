@@ -1,0 +1,170 @@
+@keyframes slideDown {
+    from {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideInLeft {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideInLeftFriends {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+.dashboard-contianer{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+
+}
+
+.page-title {
+    flex: 0 0 auto;
+  
+}
+
+.page-title h1{
+    font-family: "Rajdhani", sans-serif;
+    font-style: normal;
+}
+
+.dashboard {
+    display: flex;
+    width: 100%;
+    overflow-y: hidden;
+    flex : 1 1 auto
+}
+
+.profilHistoryAcgievmeants-container{
+    height: 100%;
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+}
+
+.profil-container{
+    animation: slideDown 1s ease-out;
+    height: 20%;
+}
+.historyAchievments-container{
+    height: 50%;
+    display: flex;
+    
+}
+
+.history-container{
+    height: 100%;
+    width: 50%;
+    font-family: "Rajdhani", sans-serif;
+    font-style: normal;
+    animation: slideInLeft 1s ease-out;
+}
+
+.achievments-container{
+    animation: slideUp 1s ease-out;
+    height: 100%;
+    width: 50%;
+}
+
+.lineChart-container{
+  animation: slideUp 1s ease-out;
+  height: 29%;
+  width: 100%;
+}
+
+.lineChart-container h2{
+  padding: 5px 0 5px 0;
+}
+
+.friends-container{
+    height: 100%;
+    width: 25%;
+    animation: slideInLeftFriends 1s ease-out;
+}
+.friends-container-media{
+  /* border: solid; */
+  display: none;
+}
+
+@media screen and (max-width: 950px) {
+
+  .dashboard {
+    flex-direction: column; 
+
+  }
+  .profilHistoryAcgievmeants-container{
+    height: 100%;
+    width: 100%;
+
+  }
+  .profil-container{
+    width: 100%;
+    height: 30%;
+
+ 
+
+  }
+  .lineChart-container{
+    display: none;
+  }
+
+  .historyAchievments-container{
+ 
+    display: flex;
+    flex-direction: column;
+    height: 70%;
+
+  }
+
+  .history-container{
+    width: 100%;
+    height: 70%;
+  }
+
+  .achievments-container{
+   display: none;
+  }
+  .friends-container{
+    display: none;
+    height: 35%;
+    width: 100%;
+    /* display: none; */
+  }
+  .friends-container-media{
+    height: 30%;
+    display: block;
+  }
+}

@@ -1,0 +1,9 @@
+.local-winner {
+    width: 255px;
+    height: 255px;
+    border-radius: 50%;
+}
+
+.resultTitre , .winer-username {
+    color: white;
+}
