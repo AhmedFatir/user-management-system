@@ -31,7 +31,6 @@ class CustomUser(AbstractUser):
 	def set_avatar_from_url(self, url):
 		response = requests.get(url)
 		if response.status_code == 200:
-			# file_name = f"avatar_{self.id}.jpg"
 			file_name = f"{self.username}_{self.id}.jpg"
 			self.avatar.save(file_name, ContentFile(response.content), save=True)
 

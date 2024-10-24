@@ -1,37 +1,25 @@
 version: '3.8'
 
 networks:
-  ft_transcendence:
-    name: ft_transcendence
+  user-management-system:
+    name: user-management-system
 
-# volumes:
-#   ft_transcendence:
-#     name: ft_transcendence
-#   postgres_data:
-#     name: postgres_data
+volumes:
+  user-management-system:
+    name: user-management-system
 
 services:
-  ft_transcendence:
-    image: ft_transcendence
-    container_name: ft_transcendence
+  user-management-system:
+    image: user-management-system
+    container_name: user-management-system
     build: .
     env_file:
       - .env
     volumes:
-      - ./lab:/root/lab
-      - ./zshrc:/root/.zshrc
-      - ./zsh_history:/root/.zsh_history
+      - user-management-system:/root
+      - ./backend:/root/backend
+      - ./CLI-Tests:/root/CLI-Tests
+    ports:
+      - "8080:8080"
     networks:
-      - ft_transcendence
-    
-  # db:
-  #   image: postgres:13
-  #   container_name: postgres_db
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-  #   environment:
-  #     - POSTGRES_DB=${DB_NAME}
-  #     - POSTGRES_USER=${DB_USER}
-  #     - POSTGRES_PASSWORD=${DB_PASSWORD}
-  #   networks:
-  #     - ft_transcendence
+      - user-management-system

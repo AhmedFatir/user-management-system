@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from .views.Register import RegisterView
 from .views.Login import LoginView, MyTokenObtainPairView
 from .views.Logout import LogoutView, DeleteAccountView
-from .views.Users import UsersView, UserDetailView, MeView
+from .views.users import UsersView, UserDetailView, MeView
 from .views.Profile import ProfileUpdateView, AvatarUploadView
 from .views.Passwords import PasswordResetView, PasswordChangeView
 from .views.TwoFactor import VerifyTwoFactorView, Enable2FAView, Verify2FAEnableView, Disable2FAView
@@ -30,9 +30,9 @@ urlpatterns = [
 	path('password-change/', PasswordChangeView.as_view(), name="password_change"),
 	path('password-reset/', PasswordResetView.as_view(), name='password_reset'),
 	
-	path('verify-2fa/', VerifyTwoFactorView.as_view(), name='verify_2fa'),
 	path('enable-2fa/', Enable2FAView.as_view(), name='enable_2fa'),
 	path('verify-enable-2fa/', Verify2FAEnableView.as_view(), name='verify_enable_2fa'),
+	path('verify-2fa/', VerifyTwoFactorView.as_view(), name='verify_2fa'),
 	path('disable-2fa/', Disable2FAView.as_view(), name='disable_2fa'),
 	
 	path('login/intra42/', IntraLoginView.as_view(), name='intra_login'),
@@ -41,10 +41,10 @@ urlpatterns = [
 	path('profile-update/', ProfileUpdateView.as_view(), name="profile-update"),
 	path('upload-avatar/', AvatarUploadView.as_view(), name='upload-avatar'),
 
+	path('friends/', FriendListView.as_view(), name='friend-list'),
 	path('friend-request/<str:username>/', FriendRequestView.as_view(), name='friend-request'),
 	path('friend-response/<str:username>/', FriendRequestResponseView.as_view(), name='friend-response'),
 	path('cancel-friend-request/<str:username>/', CancelFriendRequestView.as_view(), name='cancel-friend-request'),
-	path('friends/', FriendListView.as_view(), name='friend-list'),
 	path('friend-requests/', FriendRequestListView.as_view(), name='friend-requests'),
 
 	path('block-user/<str:username>/', BlockUserView.as_view(), name='block-user'),
@@ -54,5 +54,4 @@ urlpatterns = [
 	path('anonymize-data/', GDPRAnonymizeDataView.as_view(), name='anonymize-data'),
 	path('gdpr-dashboard/', GDPRDashboardView.as_view(), name='gdpr-dashboard'),
 	path('data-privacy-rights/', GDPRDataPrivacyRightsView.as_view(), name='data-privacy-rights'),
-
 ]

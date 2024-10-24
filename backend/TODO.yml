@@ -4,31 +4,15 @@
 ✅   ◦ Users can update their information.
 ✅   ◦ Users can upload an avatar, with a default option if none is provided.
 ✅   ◦ Users can add others as friends and view their online status.
-    ◦ Users can select a unique display name to play the tournaments.
-    ◦ User profiles display stats, such as wins and losses.
-    ◦ Each user has a Match History including 1v1 games, dates, and relevant details, accessible to logged-in users.
-
-• Major module: Live Chat.
-    ◦ The user should be able to send direct messages to other users.
-    ◦ The user should be able to block other users. This way, they will see no more messages from the account they blocked.
-    ◦ The user should be able to invite other users to play a Pong game through the chat interface.
-    ◦ The tournament system should be able to warn users expected for the next game.
-    ◦ The user should be able to access other players profiles through the chat interface.
-
-• Major module: Implement WAF/ModSecurity with Hardened Configuration and HashiCorp Vault for Secrets Management.
-    ◦ Configure and deploy a Web Application Firewall (WAF) and ModSecurity with a strict 
-        and secure configuration to protect against web-based attacks.
-    ◦ Integrate HashiCorp Vault to securely manage and store sensitive information, such as API keys, credentials, 
-        and environment variables, ensuring that these secrets are properly encrypted and isolated.
 
 • Minor module: GDPR Compliance.
-    ◦ Implement GDPR-compliant features that enable users to request anonymization of their personal data,
+✅   ◦ Implement GDPR-compliant features that enable users to request anonymization of their personal data,
         ensuring that their identity and sensitive information are protected.
-    ◦ Provide tools for users to manage their local data, including the ability to view, edit, 
+✅   ◦ Provide tools for users to manage their local data, including the ability to view, edit, 
         or delete their personal information stored within the system.
-    ◦ Offer a streamlined process for users to request the permanent deletion of their accounts,
+✅   ◦ Offer a streamlined process for users to request the permanent deletion of their accounts,
         including all associated data, ensuring compliance with data protection regulations.
-    ◦ Maintain clear and transparent communication with users regarding their data privacy rights,
+✅   ◦ Maintain clear and transparent communication with users regarding their data privacy rights,
         with easily accessible options to exercise these rights.
 
 • Major module: Implementing a remote authentication.
