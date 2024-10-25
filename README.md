@@ -55,6 +55,7 @@ git clone https://github.com/AhmedFatir/user-management-system.git
 
 cd user-management-system
 
+# Create a .env file and add the required environment variables. like in the .env.example file.
 make
 ```
 ## If you are a 42 student and want to run this project on the school's Mac, you may need to change the path where Docker Desktop on Mac stores its data.
