@@ -16,9 +16,11 @@
 - Login: Authenticates users and returns access and refresh tokens.
 - Logout: Logs out users by invalidating their refresh tokens.
 - Delete Account: Allows logged-in users to delete their account.
+- Refresh Token: Allows users to refresh their access token using a refresh token.
 ### 2. Users Management
-- View a list of all users (admin only).
-- Retrieve, update, or delete specific users.
+- View a list of all users.
+- Retrieve a specific user.
+- Retrieve the currently logged-in user.
 ### 3. Password Management
 - Change Password: Allows users to change their password.
 - Reset Password: Sends password reset emails and allows resetting passwords using a token.
@@ -27,11 +29,12 @@
 ### 5. Intra42 Login
 - Integrates with the 42 Intra API for login functionality.
 ### 6. Profile Management
-- Users can view and update their profiles.
+- Users can view and update their profile informations and profile picture.
 ### 7. Friends Management
 - Allows users to add or remove friends and view friend lists.
+- Users can also block or unblock other users.
 ### 8. GDPR Compliance
-- Provides features to comply with [GDPR regulations](https://gdpr.eu/), including user data access and deletion requests.
+- Provides features to comply with [GDPR regulations](https://gdpr.eu/), including user data anonymization and deletion.
 
 ## Setup
 ### If you don't have docker and docker-compose on your machine
