@@ -1,11 +1,17 @@
 # User Management System
 - This project is a User Management System built with `Django` and designed to be run using `Docker Compose`.
-- The system provides key features like user authentication, profile management, GDPR compliance, and more. It is containerized for ease of deployment, with a Makefile to automate Docker commands.
 
-# [API Documentation](https://github.com/AhmedFatir/user-management-system/backend/API.md)
+## Technologies
+- **Backend**: [Django](https://www.djangoproject.com/), [Django REST framework](https://www.django-rest-framework.org/)
+- **Database**: [SQLite](https://www.sqlite.org/index.html)
+- **Authentication**: [JWT](https://jwt.io/), [OAuth2](https://oauth.net/2/)
+- **Containerization**: [Docker](https://www.docker.com/), [Docker Compose](https://docs.docker.com/compose/)
+- **Testing**: [Unittest](https://docs.python.org/3/library/unittest.html#module-unittest), [Postman](https://www.postman.com/), [CLI-based Testing](https://github.com/AhmedFatir/user-management-system/tree/master/CLI-Tests)
+
+# [API Documentation](https://github.com/AhmedFatir/user-management-system/blob/master/backend/API.md)
 
 ## Main Features
-### 1. Authentication
+### 1. Authentication with JWT (JSON Web Tokens)
 - Register: Allows users to register with their username, email, and password.
 - Login: Authenticates users and returns access and refresh tokens.
 - Logout: Logs out users by invalidating their refresh tokens.
@@ -25,15 +31,7 @@
 ### 7. Friends Management
 - Allows users to add or remove friends and view friend lists.
 ### 8. GDPR Compliance
-- Provides features to comply with GDPR regulations, including user data access and deletion requests.
-
-
-## Technologies
-- **Backend**: Django, Django REST framework
-- **Database**: SQLite
-- **Authentication**: JWT, OAuth2
-- **Containerization**: Docker, Docker Compose
-- **Testing**: pytest, postman, CLI-based testing
+- Provides features to comply with [GDPR regulations](https://gdpr.eu/), including user data access and deletion requests.
 
 ## Setup
 ### If you don't have docker and docker-compose on your machine
@@ -56,7 +54,7 @@ cd user-management-system
 
 make
 ```
-## if you are a 42 student and want to run this project on the school's Mac, you may need to change the path where Docker Desktop on Mac stores its data.
+## If you are a 42 student and want to run this project on the school's Mac, you may need to change the path where Docker Desktop on Mac stores its data.
 ```bash
 # Make sure Docker Desktop is not running.
 

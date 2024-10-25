@@ -66,6 +66,20 @@
     - `HTTP_204_NO_CONTENT`: If the account is deleted.
     - `HTTP_401_UNAUTHORIZED`: If the user is not logged in.
 ---
+### Refresh Token
+- **Endpoint**: `/api//token/refresh/`
+  - **Method**: `POST`
+  - **Description**: Refreshes the access token.
+- **Request Body**:
+```
+{
+  "refresh_token": "{{refresh_token}}"
+}
+```
+  - **Response**:
+    - `HTTP_200_OK`: If the access token is refreshed.
+    - `HTTP_400_BAD_REQUEST`: If the refresh token is invalid.
+---
 ## 2-Users-Management
 ### Users List
 - **Endpoint**: `/api/users/`
